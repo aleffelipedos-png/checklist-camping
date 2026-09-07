@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f3d2f" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" sizes="192x192" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <title>Camping</title>
+  <style>
+    :root{
+      --bg:#f3f5f2; --card:#fff; --text:#1f2a24; --muted:#6f7b74;
+      --primary:#1f3d2f; --primary2:#2f5b46; --border:#dce3de;
+      --danger:#b42318; --warn:#a46600; --ok:#1d6f42; --blue:#0b6091;
+      --shadow:0 8px 24px rgba(31,61,47,.08);
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    body{padding-bottom:82px}
+    header{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;padding:calc(18px + env(safe-area-inset-top)) 16px 18px}
+    .head{max-width:760px;margin:auto}
+    .head h1{font-size:22px;margin:0 0 4px}.head p{margin:0;opacity:.82;font-size:13px}
+    main{max-width:760px;margin:auto;padding:14px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
+    .row{display:flex;gap:10px;align-items:center}.grow{flex:1}
+    label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
+    input,select,button{font:inherit}
+    input,select{width:100%;border:1px solid var(--border);background:#fff;color:var(--text);padding:13px;border-radius:13px;outline:none}
+    button{border:0;border-radius:13px;padding:12px 14px;font-weight:750;cursor:pointer}
+    .primary{background:var(--primary);color:#fff}.soft{background:#e9efeb;color:var(--primary)}
+    .danger{background:#fde8e7;color:var(--danger)}.tiny{padding:8px 10px;font-size:12px}
+    .hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
+    .trip-name{font-size:19px;font-weight:800}.trip-date{font-size:13px;color:var(--muted);margin-top:3px}
+    .pct{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary2) var(--p),#e5ebe7 0);position:relative}
+    .pct:after{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
+    .pct strong{position:relative;z-index:1;font-size:15px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+    .stat{padding:10px;border-radius:14px;background:#f4f7f5;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
+    .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px}.filter{white-space:nowrap;background:#edf1ee;color:#526057}.filter.active{background:var(--primary);color:#fff}
+    .item{padding:13px 0;border-top:1px solid #edf1ee}.item:first-child{border-top:0}
+    .item-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .item-name{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:4px}
+    .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+    .status{background:#edf1ee;color:#4d5b52;padding:10px 7px;font-size:12px}
+    .status.have.active{background:#e4f5e9;color:var(--ok)}
+    .status.buy.active{background:#fff1cf;color:var(--warn)}
+    .status.packed.active{background:#def1ff;color:var(--blue)}
+    .empty{text-align:center;color:var(--muted);padding:30px 10px}
+    nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);padding:7px 8px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);z-index:30}
+    nav button{background:transparent;padding:7px 3px;color:#68756d;font-size:11px}nav button.active{color:var(--primary)}nav .ico{font-size:21px;display:block;margin-bottom:2px}
+    .fab{position:fixed;right:18px;bottom:92px;width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;font-size:26px;box-shadow:0 10px 26px rgba(31,61,47,.35);z-index:25}
+    dialog{border:0;border-radius:20px;padding:0;width:min(92vw,520px);box-shadow:0 25px 70px rgba(0,0,0,.28)}
+    dialog::backdrop{background:rgba(0,0,0,.48)}.modal{padding:18px}.modal h3{margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+    .screen{display:none}.screen.active{display:block}
+    .section-title{display:flex;justify-content:space-between;align-items:center;margin:0 2px 9px}.section-title h2{font-size:16px;margin:0}.badge{font-size:12px;background:#edf1ee;color:#57645c;border-radius:999px;padding:5px 8px}
+    @media(max-width:560px){.grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr auto}.actions{grid-template-columns:1fr 1fr 1fr}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="head">
+    <h1>🏕️ Camping</h1>
+    <p>Seu checklist de viagem, mesmo sem internet.</p>
+  </div>
+</header>
+
+<main>
+  <section id="screenHome" class="screen active">
+    <div class="card hero">
+      <div>
+        <div class="trip-name" id="homeTripName">Meu acampamento</div>
+        <div class="trip-date" id="homeTripDate">Sem data definida</div>
+      </div>
+      <div class="pct" id="pctCircle" style="--p:0%"><strong id="pctText">0%</strong></div>
+      <div class="stats" style="grid-column:1/-1">
+        <div class="stat"><b id="statTotal">0</b><span>Total</span></div>
+        <div class="stat"><b id="statBuy">0</b><span>Comprar</span></div>
+        <div class="stat"><b id="statPacked">0</b><span>Já levei</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title"><h2>Falta preparar</h2><span class="badge" id="homePendingBadge">0 itens</span></div>
+      <div id="homePending"></div>
+    </div>
+  </section>
+
+  <section id="screenChecklist" class="screen">
+    <div class="card">
+      <div class="filters" id="filters"></div>
+    </div>
+    <div class="card">
+      <div class="section-title"><h2 id="listTitle">Todos os itens</h2><span class="badge" id="listBadge">0 itens</span></div>
+      <div id="items"></div>
+    </div>
+  </section>
+
+  <section id="screenShopping" class="screen">
+    <div class="card">
+      <div class="section-title"><h2>🛒 Lista de compras</h2><span class="badge" id="shoppingBadge">0 itens</span></div>
+      <div id="shoppingList"></div>
+    </div>
+  </section>
+
+  <section id="screenTrips" class="screen">
+    <div class="card">
+      <div class="section-title"><h2>Viagens</h2><button class="primary tiny" id="newTripBtn">+ Nova</button></div>
+      <div style="margin-bottom:10px">
+        <label>Acampamento atual</label>
+        <select id="tripSelect"></select>
+      </div>
+      <div>
+        <label>Data da viagem</label>
+        <input type="date" id="tripDate">
+      </div>
+    </div>
+  </section>
+</main>
+
+<button class="fab" id="addItemBtn" aria-label="Adicionar item">+</button>
+
+<nav>
+  <button data-screen="Home" class="active"><span class="ico">🏠</span>Início</button>
+  <button data-screen="Checklist"><span class="ico">✅</span>Checklist</button>
+  <button data-screen="Shopping"><span class="ico">🛒</span>Comprar</button>
+  <button data-screen="Trips"><span class="ico">⛺</span>Viagens</button>
+</nav>
+
+<dialog id="itemDialog">
+  <div class="modal">
+    <h3>Adicionar item</h3>
+    <div class="grid">
+      <div><label>Item</label><input id="itemName" placeholder="Ex.: Lanterna"></div>
+      <div><label>Categoria</label><select id="itemCategory"></select></div>
+      <div><label>Quantidade</label><input id="itemQty" type="number" min="1" value="1"></div>
+      <div><label>Observação</label><input id="itemNote" placeholder="Opcional"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="soft" onclick="itemDialog.close()">Cancelar</button>
+      <button class="primary" id="saveItemBtn">Adicionar</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="tripDialog">
+  <div class="modal">
+    <h3>Novo acampamento</h3>
+    <div class="grid">
+      <div><label>Nome</label><input id="tripName" placeholder="Ex.: Camping em Foz"></div>
+      <div><label>Data</label><input id="newTripDate" type="date"></div>
+    </div>
+    <div class="modal-actions">
+      <button class="soft" onclick="tripDialog.close()">Cancelar</button>
+      <button class="primary" id="saveTripBtn">Criar</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+const cats=["Todos","Acampamento","Cozinha","Alimentos","Roupas","Equipamentos","Higiene","Primeiros socorros","Lazer","Carro/viagem"];
+const starters=[
+["Barraca","Acampamento"],["Lona","Acampamento"],["Estacas","Acampamento"],["Martelo","Acampamento"],["Colchão","Acampamento"],["Bomba de ar","Acampamento"],["Saco de dormir","Acampamento"],["Travesseiro","Acampamento"],
+["Fogareiro","Cozinha"],["Gás","Cozinha"],["Panela","Cozinha"],["Pratos","Cozinha"],["Copos","Cozinha"],["Talheres","Cozinha"],["Faca","Cozinha"],["Tábua","Cozinha"],["Isqueiro","Cozinha"],["Detergente","Cozinha"],
+["Água","Alimentos"],["Café","Alimentos"],["Açúcar","Alimentos"],["Sal","Alimentos"],["Pão","Alimentos"],["Gelo","Alimentos"],
+["Camisetas","Roupas"],["Bermuda","Roupas"],["Calça","Roupas"],["Roupa íntima","Roupas"],["Chinelo","Roupas"],["Tênis","Roupas"],["Casaco","Roupas"],["Roupa de banho","Roupas"],
+["Lanterna","Equipamentos"],["Pilhas","Equipamentos"],["Power bank","Equipamentos"],["Carregadores","Equipamentos"],["Extensão","Equipamentos"],["Corda","Equipamentos"],
+["Escova de dentes","Higiene"],["Pasta de dentes","Higiene"],["Papel higiênico","Higiene"],["Toalha","Higiene"],["Sabonete","Higiene"],["Repelente","Higiene"],["Protetor solar","Higiene"],
+["Kit primeiros socorros","Primeiros socorros"],
+["Cadeira","Lazer"],["Mesa","Lazer"],["Caixa de som","Lazer"],["Jogos","Lazer"],
+["Documentos","Carro/viagem"],["Combustível","Carro/viagem"],["Calibrar pneus","Carro/viagem"]
+];
+const uid=()=>crypto.randomUUID();
+let db=JSON.parse(localStorage.getItem("campingPWA")||"null");
+if(!db){const id=uid();db={active:id,trips:[{id,name:"Meu primeiro acampamento",date:"",items:starters.map(([name,category])=>({id:uid(),name,category,qty:1,note:"",status:"none"}))}]};save();}
+let cat="Todos";
+function save(){localStorage.setItem("campingPWA",JSON.stringify(db))}
+function t(){return db.trips.find(x=>x.id===db.active)}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function fmtDate(v){if(!v)return"Sem data definida";const [y,m,d]=v.split("-");return`${d}/${m}/${y}`}
+function itemHtml(i,allowDelete=true){return `<div class="item"><div class="item-top"><div><div class="item-name">${esc(i.name)} ${i.qty>1?`<span class="badge">x${i.qty}</span>`:""}</div><div class="meta">${esc(i.category)}${i.note?` • ${esc(i.note)}`:""}</div></div>${allowDelete?`<button class="danger tiny" onclick="delItem('${i.id}')">Excluir</button>`:""}</div><div class="actions"><button class="status have ${i.status==="have"?"active":""}" onclick="statusItem('${i.id}','have')">✓ Tenho</button><button class="status buy ${i.status==="buy"?"active":""}" onclick="statusItem('${i.id}','buy')">🛒 Comprar</button><button class="status packed ${i.status==="packed"?"active":""}" onclick="statusItem('${i.id}','packed')">🎒 Já levei</button></div></div>`}
+function render(){
+ const tr=t(), total=tr.items.length, buy=tr.items.filter(i=>i.status==="buy").length, packed=tr.items.filter(i=>i.status==="packed").length,pct=total?Math.round(packed/total*100):0;
+ homeTripName.textContent=tr.name;homeTripDate.textContent=fmtDate(tr.date);pctText.textContent=pct+"%";pctCircle.style.setProperty("--p",pct+"%");
+ statTotal.textContent=total;statBuy.textContent=buy;statPacked.textContent=packed;
+ const pend=tr.items.filter(i=>i.status!=="packed").slice(0,6);homePendingBadge.textContent=(total-packed)+" itens";homePending.innerHTML=pend.length?pend.map(i=>itemHtml(i,false)).join(""):`<div class="empty">Tudo pronto para a viagem! 🎉</div>`;
+ filters.innerHTML=cats.map(c=>`<button class="filter ${c===cat?"active":""}" data-cat="${c}">${c}</button>`).join("");
+ itemCategory.innerHTML=cats.filter(c=>c!=="Todos").map(c=>`<option>${c}</option>`).join("");
+ const list=cat==="Todos"?tr.items:tr.items.filter(i=>i.category===cat);listTitle.textContent=cat==="Todos"?"Todos os itens":cat;listBadge.textContent=list.length+" itens";items.innerHTML=list.length?list.map(i=>itemHtml(i,true)).join(""):`<div class="empty">Nenhum item.</div>`;
+ const shop=tr.items.filter(i=>i.status==="buy");shoppingBadge.textContent=shop.length+" itens";shoppingList.innerHTML=shop.length?shop.map(i=>itemHtml(i,false)).join(""):`<div class="empty">Nada para comprar. 👍</div>`;
+ tripSelect.innerHTML=db.trips.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");tripSelect.value=db.active;tripDate.value=tr.date||"";
+}
+window.statusItem=(id,s)=>{const i=t().items.find(x=>x.id===id);i.status=i.status===s?"none":s;save();render()}
+window.delItem=id=>{if(confirm("Excluir este item?")){t().items=t().items.filter(x=>x.id!==id);save();render()}}
+filters.addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(b){cat=b.dataset.cat;render()}})
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
+ document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById("screen"+b.dataset.screen).classList.add("active");
+}));
+addItemBtn.onclick=()=>itemDialog.showModal();
+saveItemBtn.onclick=()=>{const n=itemName.value.trim();if(!n)return alert("Informe o nome do item.");t().items.push({id:uid(),name:n,category:itemCategory.value,qty:Math.max(1,+itemQty.value||1),note:itemNote.value.trim(),status:"none"});itemName.value="";itemQty.value=1;itemNote.value="";save();itemDialog.close();render()}
+newTripBtn.onclick=()=>{tripName.value="";newTripDate.value="";tripDialog.showModal()}
+saveTripBtn.onclick=()=>{const n=tripName.value.trim();if(!n)return alert("Informe o nome.");const id=uid(),copy=confirm("Copiar a lista do acampamento atual?");const items=copy?t().items.map(i=>({...i,id:uid(),status:"none"})):starters.map(([name,category])=>({id:uid(),name,category,qty:1,note:"",status:"none"}));db.trips.push({id,name:n,date:newTripDate.value,items});db.active=id;save();tripDialog.close();render()}
+tripSelect.onchange=()=>{db.active=tripSelect.value;cat="Todos";save();render()}
+tripDate.onchange=()=>{t().date=tripDate.value;save();render()}
+if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}
+render();
+</script>
+</body>
+</html>
