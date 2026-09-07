@@ -1,214 +1,1877 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f3d2f" />
-  <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" sizes="192x192" href="icon-192.png" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <title>Camping</title>
-  <style>
-    :root{
-      --bg:#f3f5f2; --card:#fff; --text:#1f2a24; --muted:#6f7b74;
-      --primary:#1f3d2f; --primary2:#2f5b46; --border:#dce3de;
-      --danger:#b42318; --warn:#a46600; --ok:#1d6f42; --blue:#0b6091;
-      --shadow:0 8px 24px rgba(31,61,47,.08);
-    }
-    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    body{padding-bottom:82px}
-    header{background:linear-gradient(135deg,var(--primary),var(--primary2));color:#fff;padding:calc(18px + env(safe-area-inset-top)) 16px 18px}
-    .head{max-width:760px;margin:auto}
-    .head h1{font-size:22px;margin:0 0 4px}.head p{margin:0;opacity:.82;font-size:13px}
-    main{max-width:760px;margin:auto;padding:14px}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:14px;box-shadow:var(--shadow);margin-bottom:12px}
-    .row{display:flex;gap:10px;align-items:center}.grow{flex:1}
-    label{font-size:12px;color:var(--muted);display:block;margin-bottom:5px}
-    input,select,button{font:inherit}
-    input,select{width:100%;border:1px solid var(--border);background:#fff;color:var(--text);padding:13px;border-radius:13px;outline:none}
-    button{border:0;border-radius:13px;padding:12px 14px;font-weight:750;cursor:pointer}
-    .primary{background:var(--primary);color:#fff}.soft{background:#e9efeb;color:var(--primary)}
-    .danger{background:#fde8e7;color:var(--danger)}.tiny{padding:8px 10px;font-size:12px}
-    .hero{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center}
-    .trip-name{font-size:19px;font-weight:800}.trip-date{font-size:13px;color:var(--muted);margin-top:3px}
-    .pct{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--primary2) var(--p),#e5ebe7 0);position:relative}
-    .pct:after{content:"";position:absolute;inset:7px;background:white;border-radius:50%}
-    .pct strong{position:relative;z-index:1;font-size:15px}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-    .stat{padding:10px;border-radius:14px;background:#f4f7f5;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:11px;color:var(--muted)}
-    .filters{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px}.filter{white-space:nowrap;background:#edf1ee;color:#526057}.filter.active{background:var(--primary);color:#fff}
-    .item{padding:13px 0;border-top:1px solid #edf1ee}.item:first-child{border-top:0}
-    .item-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
-    .item-name{font-weight:800}.meta{font-size:12px;color:var(--muted);margin-top:4px}
-    .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
-    .status{background:#edf1ee;color:#4d5b52;padding:10px 7px;font-size:12px}
-    .status.have.active{background:#e4f5e9;color:var(--ok)}
-    .status.buy.active{background:#fff1cf;color:var(--warn)}
-    .status.packed.active{background:#def1ff;color:var(--blue)}
-    .empty{text-align:center;color:var(--muted);padding:30px 10px}
-    nav{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:1px solid var(--border);padding:7px 8px calc(7px + env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(4,1fr);z-index:30}
-    nav button{background:transparent;padding:7px 3px;color:#68756d;font-size:11px}nav button.active{color:var(--primary)}nav .ico{font-size:21px;display:block;margin-bottom:2px}
-    .fab{position:fixed;right:18px;bottom:92px;width:56px;height:56px;border-radius:50%;background:var(--primary);color:#fff;font-size:26px;box-shadow:0 10px 26px rgba(31,61,47,.35);z-index:25}
-    dialog{border:0;border-radius:20px;padding:0;width:min(92vw,520px);box-shadow:0 25px 70px rgba(0,0,0,.28)}
-    dialog::backdrop{background:rgba(0,0,0,.48)}.modal{padding:18px}.modal h3{margin:0 0 14px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-    .screen{display:none}.screen.active{display:block}
-    .section-title{display:flex;justify-content:space-between;align-items:center;margin:0 2px 9px}.section-title h2{font-size:16px;margin:0}.badge{font-size:12px;background:#edf1ee;color:#57645c;border-radius:999px;padding:5px 8px}
-    @media(max-width:560px){.grid{grid-template-columns:1fr}.hero{grid-template-columns:1fr auto}.actions{grid-template-columns:1fr 1fr 1fr}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#173b2d">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+
+<title>Camping</title>
+
+<style>
+:root{
+  --bg:#f2f5f1;
+  --card:#fff;
+  --text:#17251f;
+  --muted:#728078;
+  --green:#173b2d;
+  --green2:#2f654d;
+  --green3:#e5efe9;
+  --line:#dce5df;
+  --orange:#f0a33a;
+  --red:#c73c32;
+  --blue:#2776a5;
+  --shadow:0 10px 30px rgba(24,58,44,.10);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+body{padding-bottom:92px}
+
+button,input,select{font:inherit}
+
+button{
+  border:0;
+  cursor:pointer;
+}
+
+.header{
+  background:
+    radial-gradient(circle at 90% 10%,rgba(255,255,255,.13),transparent 25%),
+    linear-gradient(145deg,#102d22,#285b44);
+  color:white;
+  padding:calc(18px + env(safe-area-inset-top)) 17px 24px;
+  border-radius:0 0 28px 28px;
+}
+
+.header-inner{
+  max-width:760px;
+  margin:auto;
+}
+
+.topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.brand{
+  display:flex;
+  gap:11px;
+  align-items:center;
+}
+
+.logo{
+  width:48px;
+  height:48px;
+  display:grid;
+  place-items:center;
+  background:rgba(255,255,255,.13);
+  border:1px solid rgba(255,255,255,.16);
+  border-radius:16px;
+  font-size:27px;
+}
+
+.brand h1{
+  margin:0;
+  font-size:22px;
+}
+
+.brand p{
+  margin:3px 0 0;
+  opacity:.75;
+  font-size:12px;
+}
+
+.offline{
+  background:rgba(255,255,255,.13);
+  padding:7px 10px;
+  border-radius:999px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+main{
+  max-width:760px;
+  margin:auto;
+  padding:14px;
+}
+
+.screen{display:none}
+.screen.active{display:block}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:21px;
+  padding:15px;
+  margin-bottom:12px;
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  margin-top:-2px;
+}
+
+.trip-top{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  align-items:center;
+}
+
+.trip-name{
+  font-size:21px;
+  font-weight:850;
+}
+
+.trip-date{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px;
+}
+
+.progress-ring{
+  --p:0%;
+  width:82px;
+  height:82px;
+  flex:none;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  position:relative;
+  background:conic-gradient(var(--green2) var(--p),#e7ece9 0);
+}
+
+.progress-ring:after{
+  content:"";
+  position:absolute;
+  inset:8px;
+  background:white;
+  border-radius:50%;
+}
+
+.progress-ring strong{
+  z-index:2;
+  font-size:17px;
+}
+
+.progress-label{
+  margin-top:14px;
+  display:flex;
+  justify-content:space-between;
+  font-size:12px;
+  color:var(--muted);
+}
+
+.bar{
+  height:9px;
+  background:#e8eeea;
+  border-radius:999px;
+  overflow:hidden;
+  margin-top:7px;
+}
+
+.bar div{
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg,var(--green),#4b8468);
+  border-radius:999px;
+  transition:.3s;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:7px;
+  margin-top:14px;
+}
+
+.stat{
+  background:#f4f7f5;
+  border-radius:14px;
+  text-align:center;
+  padding:10px 4px;
+}
+
+.stat b{
+  display:block;
+  font-size:18px;
+}
+
+.stat span{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.section-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:9px;
+}
+
+.section-head h2{
+  margin:0;
+  font-size:16px;
+}
+
+.badge{
+  background:#edf2ef;
+  color:#58665e;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+}
+
+.quick{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:9px;
+}
+
+.quick button{
+  background:#f3f7f4;
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:15px 10px;
+  text-align:left;
+  color:var(--text);
+}
+
+.quick .emoji{
+  font-size:25px;
+  display:block;
+  margin-bottom:7px;
+}
+
+.quick strong{
+  display:block;
+  font-size:13px;
+}
+
+.quick small{
+  color:var(--muted);
+}
+
+.filters{
+  display:flex;
+  gap:7px;
+  overflow:auto;
+  scrollbar-width:none;
+}
+
+.filters::-webkit-scrollbar{display:none}
+
+.filter{
+  padding:9px 12px;
+  border-radius:999px;
+  background:#edf2ef;
+  color:#526159;
+  white-space:nowrap;
+  font-size:12px;
+  font-weight:700;
+}
+
+.filter.active{
+  background:var(--green);
+  color:white;
+}
+
+.search{
+  width:100%;
+  border:1px solid var(--line);
+  background:#f8faf9;
+  padding:13px 14px;
+  border-radius:14px;
+  outline:none;
+  color:var(--text);
+  margin-bottom:10px;
+}
+
+.item{
+  padding:14px 0;
+  border-top:1px solid #edf1ee;
+}
+
+.item:first-child{border-top:0}
+
+.item-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.item-name{
+  font-weight:800;
+  font-size:15px;
+}
+
+.meta{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:4px;
+}
+
+.item-actions{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+  margin-top:10px;
+}
+
+.status{
+  border-radius:11px;
+  padding:9px 4px;
+  background:#edf2ef;
+  color:#56645c;
+  font-size:11px;
+  font-weight:750;
+}
+
+.status.have.active{
+  background:#e2f4e8;
+  color:#17663a;
+}
+
+.status.buy.active{
+  background:#fff0cf;
+  color:#956000;
+}
+
+.status.packed.active{
+  background:#dff1fc;
+  color:#12678f;
+}
+
+.delete{
+  background:#fde8e7;
+  color:#b62c25;
+  padding:7px 9px;
+  border-radius:10px;
+  font-size:11px;
+}
+
+.empty{
+  text-align:center;
+  padding:30px 10px;
+  color:var(--muted);
+}
+
+input,select{
+  width:100%;
+  padding:13px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:white;
+  color:var(--text);
+  outline:none;
+}
+
+label{
+  display:block;
+  font-size:11px;
+  color:var(--muted);
+  margin-bottom:5px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.primary{
+  background:var(--green);
+  color:white;
+  padding:12px 14px;
+  border-radius:13px;
+  font-weight:800;
+}
+
+.soft{
+  background:#eaf0ec;
+  color:var(--green);
+  padding:12px 14px;
+  border-radius:13px;
+  font-weight:750;
+}
+
+.expense{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:8px;
+  align-items:center;
+  padding:11px 0;
+  border-top:1px solid #edf1ee;
+}
+
+.expense:first-child{border-top:0}
+
+.money{
+  font-weight:850;
+}
+
+.total-money{
+  font-size:28px;
+  font-weight:900;
+  color:var(--green);
+}
+
+.person-tag{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:999px;
+  background:#eeeaf8;
+  color:#5d4788;
+  font-size:10px;
+  margin-top:5px;
+}
+
+.fab{
+  position:fixed;
+  right:18px;
+  bottom:94px;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:var(--green);
+  color:white;
+  font-size:28px;
+  z-index:40;
+  box-shadow:0 12px 30px rgba(23,59,45,.38);
+}
+
+nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  background:rgba(255,255,255,.97);
+  border-top:1px solid var(--line);
+  padding:6px 5px calc(7px + env(safe-area-inset-bottom));
+  z-index:35;
+  backdrop-filter:blur(15px);
+}
+
+nav button{
+  background:transparent;
+  color:#76827b;
+  font-size:9px;
+  padding:5px 1px;
+}
+
+nav button.active{
+  color:var(--green);
+  font-weight:800;
+}
+
+nav .ico{
+  display:block;
+  font-size:20px;
+  margin-bottom:2px;
+}
+
+dialog{
+  border:0;
+  border-radius:22px;
+  padding:0;
+  width:min(92vw,520px);
+  box-shadow:0 25px 70px rgba(0,0,0,.3);
+}
+
+dialog::backdrop{
+  background:rgba(0,0,0,.5);
+}
+
+.modal{
+  padding:18px;
+}
+
+.modal h3{
+  margin:0 0 15px;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:8px;
+  margin-top:15px;
+}
+
+@media(max-width:560px){
+  .form-grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(4,1fr)}
+}
+
+body.dark{
+  --bg:#101713;
+  --card:#17201b;
+  --text:#eef5f0;
+  --muted:#9eaaa3;
+  --line:#29362f;
+  --green:#3f765b;
+  --green2:#579173;
+  --green3:#22342a;
+  --shadow:none;
+}
+
+body.dark input,
+body.dark select{
+  background:#111914;
+}
+
+body.dark .stat,
+body.dark .quick button,
+body.dark .search{
+  background:#1d2922;
+}
+
+body.dark .progress-ring:after{
+  background:var(--card);
+}
+
+body.dark nav{
+  background:rgba(23,32,27,.97);
+}
+
+body.dark .filter{
+  background:#26332c;
+  color:#c6d0ca;
+}
+
+body.dark .badge{
+  background:#27342d;
+  color:#c4cec8;
+}
+</style>
 </head>
+
 <body>
-<header>
-  <div class="head">
-    <h1>🏕️ Camping</h1>
-    <p>Seu checklist de viagem, mesmo sem internet.</p>
+
+<header class="header">
+<div class="header-inner">
+  <div class="topline">
+    <div class="brand">
+      <div class="logo">⛺</div>
+      <div>
+        <h1>Camping</h1>
+        <p>Organize tudo antes de pegar a estrada</p>
+      </div>
+    </div>
+    <div class="offline" id="connectionStatus">● Online</div>
   </div>
+</div>
 </header>
 
 <main>
-  <section id="screenHome" class="screen active">
-    <div class="card hero">
+
+<section id="screenHome" class="screen active">
+
+  <div class="card hero">
+    <div class="trip-top">
       <div>
         <div class="trip-name" id="homeTripName">Meu acampamento</div>
         <div class="trip-date" id="homeTripDate">Sem data definida</div>
       </div>
-      <div class="pct" id="pctCircle" style="--p:0%"><strong id="pctText">0%</strong></div>
-      <div class="stats" style="grid-column:1/-1">
-        <div class="stat"><b id="statTotal">0</b><span>Total</span></div>
-        <div class="stat"><b id="statBuy">0</b><span>Comprar</span></div>
-        <div class="stat"><b id="statPacked">0</b><span>Já levei</span></div>
+
+      <div class="progress-ring" id="pctCircle">
+        <strong id="pctText">0%</strong>
       </div>
     </div>
 
-    <div class="card">
-      <div class="section-title"><h2>Falta preparar</h2><span class="badge" id="homePendingBadge">0 itens</span></div>
-      <div id="homePending"></div>
+    <div class="progress-label">
+      <span>Preparação da viagem</span>
+      <span id="progressMessage">Vamos começar!</span>
     </div>
-  </section>
 
-  <section id="screenChecklist" class="screen">
-    <div class="card">
-      <div class="filters" id="filters"></div>
+    <div class="bar">
+      <div id="progressBar"></div>
     </div>
-    <div class="card">
-      <div class="section-title"><h2 id="listTitle">Todos os itens</h2><span class="badge" id="listBadge">0 itens</span></div>
-      <div id="items"></div>
-    </div>
-  </section>
 
-  <section id="screenShopping" class="screen">
-    <div class="card">
-      <div class="section-title"><h2>🛒 Lista de compras</h2><span class="badge" id="shoppingBadge">0 itens</span></div>
-      <div id="shoppingList"></div>
-    </div>
-  </section>
-
-  <section id="screenTrips" class="screen">
-    <div class="card">
-      <div class="section-title"><h2>Viagens</h2><button class="primary tiny" id="newTripBtn">+ Nova</button></div>
-      <div style="margin-bottom:10px">
-        <label>Acampamento atual</label>
-        <select id="tripSelect"></select>
+    <div class="stats">
+      <div class="stat">
+        <b id="statTotal">0</b>
+        <span>Itens</span>
       </div>
-      <div>
-        <label>Data da viagem</label>
-        <input type="date" id="tripDate">
+      <div class="stat">
+        <b id="statHave">0</b>
+        <span>Tenho</span>
+      </div>
+      <div class="stat">
+        <b id="statBuy">0</b>
+        <span>Comprar</span>
+      </div>
+      <div class="stat">
+        <b id="statPacked">0</b>
+        <span>No carro</span>
       </div>
     </div>
-  </section>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>⚡ Acesso rápido</h2>
+    </div>
+
+    <div class="quick">
+      <button onclick="openScreen('Checklist')">
+        <span class="emoji">🎒</span>
+        <strong>O que falta</strong>
+        <small id="quickPending">0 itens</small>
+      </button>
+
+      <button onclick="openScreen('Shopping')">
+        <span class="emoji">🛒</span>
+        <strong>Comprar</strong>
+        <small id="quickBuy">0 itens</small>
+      </button>
+
+      <button onclick="openScreen('Expenses')">
+        <span class="emoji">💰</span>
+        <strong>Gastos</strong>
+        <small id="quickExpense">R$ 0,00</small>
+      </button>
+
+      <button onclick="openScreen('More')">
+        <span class="emoji">⚙️</span>
+        <strong>Mais</strong>
+        <small>Viagem e ajustes</small>
+      </button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>📌 Ainda falta colocar</h2>
+      <span class="badge" id="homePendingBadge">0</span>
+    </div>
+    <div id="homePending"></div>
+  </div>
+
+</section>
+
+
+<section id="screenChecklist" class="screen">
+
+  <div class="card">
+    <input
+      class="search"
+      id="searchInput"
+      placeholder="🔎 Procurar item..."
+    >
+
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2 id="listTitle">Checklist</h2>
+      <span class="badge" id="listBadge">0 itens</span>
+    </div>
+
+    <div id="items"></div>
+  </div>
+
+</section>
+
+
+<section id="screenShopping" class="screen">
+
+  <div class="card">
+    <div class="section-head">
+      <h2>🛒 Lista de compras</h2>
+      <span class="badge" id="shoppingBadge">0 itens</span>
+    </div>
+
+    <div id="shoppingList"></div>
+  </div>
+
+</section>
+
+
+<section id="screenExpenses" class="screen">
+
+  <div class="card">
+    <label>Total gasto na viagem</label>
+    <div class="total-money" id="expenseTotal">R$ 0,00</div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>💰 Gastos</h2>
+      <button class="primary" onclick="expenseDialog.showModal()">+ Adicionar</button>
+    </div>
+
+    <div id="expenseList"></div>
+  </div>
+
+</section>
+
+
+<section id="screenMore" class="screen">
+
+  <div class="card">
+    <div class="section-head">
+      <h2>⛺ Minha viagem</h2>
+      <button class="primary" onclick="tripDialog.showModal()">+ Nova</button>
+    </div>
+
+    <label>Viagem atual</label>
+    <select id="tripSelect"></select>
+
+    <div style="height:10px"></div>
+
+    <label>Data da viagem</label>
+    <input type="date" id="tripDate">
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>👥 Pessoas</h2>
+      <button class="soft" onclick="personDialog.showModal()">+ Pessoa</button>
+    </div>
+
+    <div id="peopleList"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>🚗 Antes de sair</h2>
+    </div>
+
+    <div id="carChecklist"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-head">
+      <h2>⚙️ Configurações</h2>
+    </div>
+
+    <button class="soft" style="width:100%;margin-bottom:8px" onclick="toggleDark()">
+      🌙 Alternar modo claro/escuro
+    </button>
+
+    <button class="soft" style="width:100%;margin-bottom:8px" onclick="exportBackup()">
+      💾 Fazer backup
+    </button>
+
+    <button class="soft" style="width:100%" onclick="resetStatuses()">
+      🔄 Limpar marcações desta viagem
+    </button>
+  </div>
+
+</section>
+
 </main>
 
-<button class="fab" id="addItemBtn" aria-label="Adicionar item">+</button>
+
+<button class="fab" id="addItemBtn">+</button>
+
 
 <nav>
-  <button data-screen="Home" class="active"><span class="ico">🏠</span>Início</button>
-  <button data-screen="Checklist"><span class="ico">✅</span>Checklist</button>
-  <button data-screen="Shopping"><span class="ico">🛒</span>Comprar</button>
-  <button data-screen="Trips"><span class="ico">⛺</span>Viagens</button>
+<button data-screen="Home" class="active">
+  <span class="ico">🏠</span>
+  Início
+</button>
+
+<button data-screen="Checklist">
+  <span class="ico">✅</span>
+  Checklist
+</button>
+
+<button data-screen="Shopping">
+  <span class="ico">🛒</span>
+  Compras
+</button>
+
+<button data-screen="Expenses">
+  <span class="ico">💰</span>
+  Gastos
+</button>
+
+<button data-screen="More">
+  <span class="ico">☰</span>
+  Mais
+</button>
 </nav>
 
+
 <dialog id="itemDialog">
-  <div class="modal">
-    <h3>Adicionar item</h3>
-    <div class="grid">
-      <div><label>Item</label><input id="itemName" placeholder="Ex.: Lanterna"></div>
-      <div><label>Categoria</label><select id="itemCategory"></select></div>
-      <div><label>Quantidade</label><input id="itemQty" type="number" min="1" value="1"></div>
-      <div><label>Observação</label><input id="itemNote" placeholder="Opcional"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="soft" onclick="itemDialog.close()">Cancelar</button>
-      <button class="primary" id="saveItemBtn">Adicionar</button>
-    </div>
-  </div>
+<div class="modal">
+
+<h3>🎒 Adicionar item</h3>
+
+<div class="form-grid">
+
+<div>
+<label>Item</label>
+<input id="itemName" placeholder="Ex.: Lanterna">
+</div>
+
+<div>
+<label>Categoria</label>
+<select id="itemCategory"></select>
+</div>
+
+<div>
+<label>Quantidade</label>
+<input id="itemQty" type="number" min="1" value="1">
+</div>
+
+<div>
+<label>Responsável</label>
+<select id="itemPerson"></select>
+</div>
+
+<div style="grid-column:1/-1">
+<label>Observação</label>
+<input id="itemNote" placeholder="Opcional">
+</div>
+
+</div>
+
+<div class="modal-actions">
+<button class="soft" onclick="itemDialog.close()">Cancelar</button>
+<button class="primary" id="saveItemBtn">Adicionar</button>
+</div>
+
+</div>
 </dialog>
+
 
 <dialog id="tripDialog">
-  <div class="modal">
-    <h3>Novo acampamento</h3>
-    <div class="grid">
-      <div><label>Nome</label><input id="tripName" placeholder="Ex.: Camping em Foz"></div>
-      <div><label>Data</label><input id="newTripDate" type="date"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="soft" onclick="tripDialog.close()">Cancelar</button>
-      <button class="primary" id="saveTripBtn">Criar</button>
-    </div>
-  </div>
+<div class="modal">
+
+<h3>⛺ Nova viagem</h3>
+
+<div class="form-grid">
+
+<div>
+<label>Nome</label>
+<input id="tripName" placeholder="Ex.: Camping Foz">
+</div>
+
+<div>
+<label>Data</label>
+<input id="newTripDate" type="date">
+</div>
+
+</div>
+
+<div class="modal-actions">
+<button class="soft" onclick="tripDialog.close()">Cancelar</button>
+<button class="primary" id="saveTripBtn">Criar viagem</button>
+</div>
+
+</div>
 </dialog>
 
+
+<dialog id="expenseDialog">
+<div class="modal">
+
+<h3>💰 Adicionar gasto</h3>
+
+<div class="form-grid">
+
+<div>
+<label>Descrição</label>
+<input id="expenseName" placeholder="Ex.: Combustível">
+</div>
+
+<div>
+<label>Valor</label>
+<input id="expenseValue" type="number" step="0.01" placeholder="0,00">
+</div>
+
+<div>
+<label>Categoria</label>
+<select id="expenseCategory">
+<option>Combustível</option>
+<option>Camping</option>
+<option>Mercado</option>
+<option>Alimentação</option>
+<option>Pedágio</option>
+<option>Outros</option>
+</select>
+</div>
+
+</div>
+
+<div class="modal-actions">
+<button class="soft" onclick="expenseDialog.close()">Cancelar</button>
+<button class="primary" id="saveExpenseBtn">Salvar</button>
+</div>
+
+</div>
+</dialog>
+
+
+<dialog id="personDialog">
+<div class="modal">
+
+<h3>👤 Adicionar pessoa</h3>
+
+<label>Nome</label>
+<input id="personName" placeholder="Nome da pessoa">
+
+<div class="modal-actions">
+<button class="soft" onclick="personDialog.close()">Cancelar</button>
+<button class="primary" id="savePersonBtn">Adicionar</button>
+</div>
+
+</div>
+</dialog>
+
+
 <script>
-const cats=["Todos","Acampamento","Cozinha","Alimentos","Roupas","Equipamentos","Higiene","Primeiros socorros","Lazer","Carro/viagem"];
-const starters=[
-["Barraca","Acampamento"],["Lona","Acampamento"],["Estacas","Acampamento"],["Martelo","Acampamento"],["Colchão","Acampamento"],["Bomba de ar","Acampamento"],["Saco de dormir","Acampamento"],["Travesseiro","Acampamento"],
-["Fogareiro","Cozinha"],["Gás","Cozinha"],["Panela","Cozinha"],["Pratos","Cozinha"],["Copos","Cozinha"],["Talheres","Cozinha"],["Faca","Cozinha"],["Tábua","Cozinha"],["Isqueiro","Cozinha"],["Detergente","Cozinha"],
-["Água","Alimentos"],["Café","Alimentos"],["Açúcar","Alimentos"],["Sal","Alimentos"],["Pão","Alimentos"],["Gelo","Alimentos"],
-["Camisetas","Roupas"],["Bermuda","Roupas"],["Calça","Roupas"],["Roupa íntima","Roupas"],["Chinelo","Roupas"],["Tênis","Roupas"],["Casaco","Roupas"],["Roupa de banho","Roupas"],
-["Lanterna","Equipamentos"],["Pilhas","Equipamentos"],["Power bank","Equipamentos"],["Carregadores","Equipamentos"],["Extensão","Equipamentos"],["Corda","Equipamentos"],
-["Escova de dentes","Higiene"],["Pasta de dentes","Higiene"],["Papel higiênico","Higiene"],["Toalha","Higiene"],["Sabonete","Higiene"],["Repelente","Higiene"],["Protetor solar","Higiene"],
-["Kit primeiros socorros","Primeiros socorros"],
-["Cadeira","Lazer"],["Mesa","Lazer"],["Caixa de som","Lazer"],["Jogos","Lazer"],
-["Documentos","Carro/viagem"],["Combustível","Carro/viagem"],["Calibrar pneus","Carro/viagem"]
+
+const categories=[
+"Todos",
+"Acampamento",
+"Cozinha",
+"Alimentos",
+"Bebidas",
+"Roupas",
+"Equipamentos",
+"Higiene",
+"Primeiros socorros",
+"Lazer",
+"Carro/viagem"
 ];
-const uid=()=>crypto.randomUUID();
-let db=JSON.parse(localStorage.getItem("campingPWA")||"null");
-if(!db){const id=uid();db={active:id,trips:[{id,name:"Meu primeiro acampamento",date:"",items:starters.map(([name,category])=>({id:uid(),name,category,qty:1,note:"",status:"none"}))}]};save();}
-let cat="Todos";
-function save(){localStorage.setItem("campingPWA",JSON.stringify(db))}
-function t(){return db.trips.find(x=>x.id===db.active)}
-function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
-function fmtDate(v){if(!v)return"Sem data definida";const [y,m,d]=v.split("-");return`${d}/${m}/${y}`}
-function itemHtml(i,allowDelete=true){return `<div class="item"><div class="item-top"><div><div class="item-name">${esc(i.name)} ${i.qty>1?`<span class="badge">x${i.qty}</span>`:""}</div><div class="meta">${esc(i.category)}${i.note?` • ${esc(i.note)}`:""}</div></div>${allowDelete?`<button class="danger tiny" onclick="delItem('${i.id}')">Excluir</button>`:""}</div><div class="actions"><button class="status have ${i.status==="have"?"active":""}" onclick="statusItem('${i.id}','have')">✓ Tenho</button><button class="status buy ${i.status==="buy"?"active":""}" onclick="statusItem('${i.id}','buy')">🛒 Comprar</button><button class="status packed ${i.status==="packed"?"active":""}" onclick="statusItem('${i.id}','packed')">🎒 Já levei</button></div></div>`}
-function render(){
- const tr=t(), total=tr.items.length, buy=tr.items.filter(i=>i.status==="buy").length, packed=tr.items.filter(i=>i.status==="packed").length,pct=total?Math.round(packed/total*100):0;
- homeTripName.textContent=tr.name;homeTripDate.textContent=fmtDate(tr.date);pctText.textContent=pct+"%";pctCircle.style.setProperty("--p",pct+"%");
- statTotal.textContent=total;statBuy.textContent=buy;statPacked.textContent=packed;
- const pend=tr.items.filter(i=>i.status!=="packed").slice(0,6);homePendingBadge.textContent=(total-packed)+" itens";homePending.innerHTML=pend.length?pend.map(i=>itemHtml(i,false)).join(""):`<div class="empty">Tudo pronto para a viagem! 🎉</div>`;
- filters.innerHTML=cats.map(c=>`<button class="filter ${c===cat?"active":""}" data-cat="${c}">${c}</button>`).join("");
- itemCategory.innerHTML=cats.filter(c=>c!=="Todos").map(c=>`<option>${c}</option>`).join("");
- const list=cat==="Todos"?tr.items:tr.items.filter(i=>i.category===cat);listTitle.textContent=cat==="Todos"?"Todos os itens":cat;listBadge.textContent=list.length+" itens";items.innerHTML=list.length?list.map(i=>itemHtml(i,true)).join(""):`<div class="empty">Nenhum item.</div>`;
- const shop=tr.items.filter(i=>i.status==="buy");shoppingBadge.textContent=shop.length+" itens";shoppingList.innerHTML=shop.length?shop.map(i=>itemHtml(i,false)).join(""):`<div class="empty">Nada para comprar. 👍</div>`;
- tripSelect.innerHTML=db.trips.map(x=>`<option value="${x.id}">${esc(x.name)}</option>`).join("");tripSelect.value=db.active;tripDate.value=tr.date||"";
+
+const starterItems=[
+["Barraca","Acampamento"],
+["Lona","Acampamento"],
+["Estacas","Acampamento"],
+["Martelo","Acampamento"],
+["Colchão","Acampamento"],
+["Bomba de ar","Acampamento"],
+["Saco de dormir","Acampamento"],
+["Travesseiro","Acampamento"],
+
+["Fogareiro","Cozinha"],
+["Gás","Cozinha"],
+["Panela","Cozinha"],
+["Pratos","Cozinha"],
+["Copos","Cozinha"],
+["Talheres","Cozinha"],
+["Faca","Cozinha"],
+["Tábua","Cozinha"],
+["Isqueiro","Cozinha"],
+["Detergente","Cozinha"],
+["Esponja","Cozinha"],
+["Saco de lixo","Cozinha"],
+
+["Água","Bebidas"],
+["Refrigerante","Bebidas"],
+["Café","Alimentos"],
+["Açúcar","Alimentos"],
+["Sal","Alimentos"],
+["Pão","Alimentos"],
+["Gelo","Alimentos"],
+["Carne","Alimentos"],
+
+["Camisetas","Roupas"],
+["Bermuda","Roupas"],
+["Calça","Roupas"],
+["Roupa íntima","Roupas"],
+["Chinelo","Roupas"],
+["Tênis","Roupas"],
+["Casaco","Roupas"],
+["Roupa de banho","Roupas"],
+
+["Lanterna","Equipamentos"],
+["Pilhas","Equipamentos"],
+["Power bank","Equipamentos"],
+["Carregadores","Equipamentos"],
+["Extensão","Equipamentos"],
+["Corda","Equipamentos"],
+
+["Escova de dentes","Higiene"],
+["Pasta de dentes","Higiene"],
+["Papel higiênico","Higiene"],
+["Toalha","Higiene"],
+["Sabonete","Higiene"],
+["Repelente","Higiene"],
+["Protetor solar","Higiene"],
+
+["Kit primeiros socorros","Primeiros socorros"],
+
+["Cadeira","Lazer"],
+["Mesa","Lazer"],
+["Caixa de som","Lazer"],
+["Jogos","Lazer"],
+
+["Documentos","Carro/viagem"],
+["Combustível","Carro/viagem"],
+["Calibrar pneus","Carro/viagem"]
+];
+
+const defaultCar=[
+"Combustível",
+"Calibrar pneus",
+"Verificar óleo",
+"Documentos",
+"Carregador do celular",
+"Estepe e ferramentas"
+];
+
+const uid=()=>{
+  if(window.crypto && crypto.randomUUID){
+    return crypto.randomUUID();
+  }
+  return Date.now().toString(36)+Math.random().toString(36).slice(2);
+};
+
+let db;
+
+try{
+  db=JSON.parse(localStorage.getItem("campingPWA")||"null");
+}catch(e){
+  db=null;
 }
-window.statusItem=(id,s)=>{const i=t().items.find(x=>x.id===id);i.status=i.status===s?"none":s;save();render()}
-window.delItem=id=>{if(confirm("Excluir este item?")){t().items=t().items.filter(x=>x.id!==id);save();render()}}
-filters.addEventListener("click",e=>{const b=e.target.closest("[data-cat]");if(b){cat=b.dataset.cat;render()}})
-document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>{
- document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));b.classList.add("active");
- document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));document.getElementById("screen"+b.dataset.screen).classList.add("active");
-}));
-addItemBtn.onclick=()=>itemDialog.showModal();
-saveItemBtn.onclick=()=>{const n=itemName.value.trim();if(!n)return alert("Informe o nome do item.");t().items.push({id:uid(),name:n,category:itemCategory.value,qty:Math.max(1,+itemQty.value||1),note:itemNote.value.trim(),status:"none"});itemName.value="";itemQty.value=1;itemNote.value="";save();itemDialog.close();render()}
-newTripBtn.onclick=()=>{tripName.value="";newTripDate.value="";tripDialog.showModal()}
-saveTripBtn.onclick=()=>{const n=tripName.value.trim();if(!n)return alert("Informe o nome.");const id=uid(),copy=confirm("Copiar a lista do acampamento atual?");const items=copy?t().items.map(i=>({...i,id:uid(),status:"none"})):starters.map(([name,category])=>({id:uid(),name,category,qty:1,note:"",status:"none"}));db.trips.push({id,name:n,date:newTripDate.value,items});db.active=id;save();tripDialog.close();render()}
-tripSelect.onchange=()=>{db.active=tripSelect.value;cat="Todos";save();render()}
-tripDate.onchange=()=>{t().date=tripDate.value;save();render()}
-if("serviceWorker"in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js"))}
+
+if(!db){
+  const id=uid();
+
+  db={
+    active:id,
+    dark:false,
+    trips:[
+      {
+        id,
+        name:"Meu primeiro acampamento",
+        date:"",
+        people:[],
+        expenses:[],
+        car:defaultCar.map(name=>({
+          id:uid(),
+          name,
+          done:false
+        })),
+        items:starterItems.map(([name,category])=>({
+          id:uid(),
+          name,
+          category,
+          qty:1,
+          note:"",
+          person:"",
+          status:"none"
+        }))
+      }
+    ]
+  };
+}
+
+/* Compatibilidade com sua versão antiga */
+db.dark=db.dark||false;
+
+db.trips.forEach(trip=>{
+
+  trip.people=trip.people||[];
+  trip.expenses=trip.expenses||[];
+
+  trip.car=trip.car||defaultCar.map(name=>({
+    id:uid(),
+    name,
+    done:false
+  }));
+
+  trip.items=trip.items||[];
+
+  trip.items.forEach(item=>{
+    if(!item.person) item.person="";
+    if(!item.status) item.status="none";
+    if(!item.qty) item.qty=1;
+    if(!item.note) item.note="";
+  });
+
+});
+
+function save(){
+  localStorage.setItem("campingPWA",JSON.stringify(db));
+}
+
+save();
+
+let currentCategory="Todos";
+let searchText="";
+
+function currentTrip(){
+  return db.trips.find(x=>x.id===db.active) || db.trips[0];
+}
+
+function escapeHtml(value){
+  return String(value??"").replace(
+    /[&<>"']/g,
+    m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[m])
+  );
+}
+
+function formatDate(value){
+  if(!value) return "Sem data definida";
+
+  const parts=value.split("-");
+
+  if(parts.length!==3) return value;
+
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+function money(value){
+  return Number(value||0).toLocaleString(
+    "pt-BR",
+    {
+      style:"currency",
+      currency:"BRL"
+    }
+  );
+}
+
+function progressMessage(pct){
+
+  if(pct===100) return "Tudo pronto! 🏕️";
+
+  if(pct>=75) return "Quase pronto!";
+
+  if(pct>=50) return "Na metade!";
+
+  if(pct>=25) return "Bom progresso";
+
+  return "Vamos começar!";
+}
+
+function itemHTML(item,allowDelete=true){
+
+  return `
+  <div class="item">
+
+    <div class="item-top">
+
+      <div>
+        <div class="item-name">
+          ${escapeHtml(item.name)}
+          ${item.qty>1?`<span class="badge">x${item.qty}</span>`:""}
+        </div>
+
+        <div class="meta">
+          ${escapeHtml(item.category)}
+          ${item.note?` • ${escapeHtml(item.note)}`:""}
+        </div>
+
+        ${
+          item.person
+          ? `<span class="person-tag">👤 ${escapeHtml(item.person)}</span>`
+          : ""
+        }
+
+      </div>
+
+      ${
+        allowDelete
+        ? `<button class="delete" onclick="deleteItem('${item.id}')">Excluir</button>`
+        : ""
+      }
+
+    </div>
+
+    <div class="item-actions">
+
+      <button
+        class="status have ${item.status==="have"?"active":""}"
+        onclick="setItemStatus('${item.id}','have')">
+        ✓ Tenho
+      </button>
+
+      <button
+        class="status buy ${item.status==="buy"?"active":""}"
+        onclick="setItemStatus('${item.id}','buy')">
+        🛒 Comprar
+      </button>
+
+      <button
+        class="status packed ${item.status==="packed"?"active":""}"
+        onclick="setItemStatus('${item.id}','packed')">
+        🚗 No carro
+      </button>
+
+    </div>
+
+  </div>
+  `;
+}
+
+function render(){
+
+  const trip=currentTrip();
+
+  if(!trip) return;
+
+  document.body.classList.toggle("dark",!!db.dark);
+
+  const total=trip.items.length;
+  const have=trip.items.filter(i=>i.status==="have").length;
+  const buy=trip.items.filter(i=>i.status==="buy").length;
+  const packed=trip.items.filter(i=>i.status==="packed").length;
+
+  const pct=total
+    ? Math.round((packed/total)*100)
+    : 0;
+
+  homeTripName.textContent=trip.name;
+  homeTripDate.textContent=formatDate(trip.date);
+
+  pctText.textContent=pct+"%";
+  pctCircle.style.setProperty("--p",pct+"%");
+
+  progressBar.style.width=pct+"%";
+  progressMessageEl.textContent=progressMessage(pct);
+
+  statTotal.textContent=total;
+  statHave.textContent=have;
+  statBuy.textContent=buy;
+  statPacked.textContent=packed;
+
+  const pending=trip.items.filter(
+    item=>item.status!=="packed"
+  );
+
+  quickPending.textContent=pending.length+" itens";
+  quickBuy.textContent=buy+" itens";
+
+  homePendingBadge.textContent=pending.length+" itens";
+
+  homePending.innerHTML=pending.length
+    ? pending.slice(0,6).map(
+        item=>itemHTML(item,false)
+      ).join("")
+    : `<div class="empty">
+         🏕️ Tudo pronto!<br>
+         Bora acampar!
+       </div>`;
+
+  filters.innerHTML=categories.map(category=>`
+    <button
+      class="filter ${category===currentCategory?"active":""}"
+      data-category="${escapeHtml(category)}">
+      ${escapeHtml(category)}
+    </button>
+  `).join("");
+
+  itemCategory.innerHTML=categories
+    .filter(c=>c!=="Todos")
+    .map(c=>`<option>${escapeHtml(c)}</option>`)
+    .join("");
+
+  let list=[...trip.items];
+
+  if(currentCategory!=="Todos"){
+    list=list.filter(
+      item=>item.category===currentCategory
+    );
+  }
+
+  if(searchText){
+    const q=searchText.toLowerCase();
+
+    list=list.filter(item=>
+      item.name.toLowerCase().includes(q) ||
+      item.category.toLowerCase().includes(q) ||
+      (item.note||"").toLowerCase().includes(q)
+    );
+  }
+
+  listTitle.textContent=
+    currentCategory==="Todos"
+      ? "Todos os itens"
+      : currentCategory;
+
+  listBadge.textContent=list.length+" itens";
+
+  items.innerHTML=list.length
+    ? list.map(item=>itemHTML(item,true)).join("")
+    : `<div class="empty">Nenhum item encontrado.</div>`;
+
+  const shopping=trip.items.filter(
+    item=>item.status==="buy"
+  );
+
+  shoppingBadge.textContent=shopping.length+" itens";
+
+  shoppingList.innerHTML=shopping.length
+    ? shopping.map(
+        item=>itemHTML(item,false)
+      ).join("")
+    : `<div class="empty">
+         🛒 Sua lista de compras está vazia.
+       </div>`;
+
+  tripSelect.innerHTML=db.trips.map(tr=>`
+    <option value="${tr.id}">
+      ${escapeHtml(tr.name)}
+    </option>
+  `).join("");
+
+  tripSelect.value=db.active;
+  tripDate.value=trip.date||"";
+
+  itemPerson.innerHTML=
+    `<option value="">Sem responsável</option>`+
+    trip.people.map(person=>`
+      <option value="${escapeHtml(person)}">
+        ${escapeHtml(person)}
+      </option>
+    `).join("");
+
+  peopleList.innerHTML=trip.people.length
+    ? trip.people.map(person=>`
+        <div class="item">
+          <div class="item-top">
+            <div class="item-name">
+              👤 ${escapeHtml(person)}
+            </div>
+
+            <button
+              class="delete"
+              onclick="deletePerson('${encodeURIComponent(person)}')">
+              Remover
+            </button>
+          </div>
+        </div>
+      `).join("")
+    : `<div class="empty">
+         Nenhuma pessoa adicionada.
+       </div>`;
+
+  carChecklist.innerHTML=trip.car.map(car=>`
+    <div class="item">
+
+      <div class="item-top">
+
+        <div class="item-name">
+          ${car.done?"✅":"⬜"} ${escapeHtml(car.name)}
+        </div>
+
+        <button
+          class="${car.done?"soft":"primary"}"
+          onclick="toggleCar('${car.id}')">
+          ${car.done?"Desmarcar":"Pronto"}
+        </button>
+
+      </div>
+
+    </div>
+  `).join("");
+
+  const expenseTotalValue=trip.expenses.reduce(
+    (sum,e)=>sum+Number(e.value||0),
+    0
+  );
+
+  expenseTotal.textContent=money(expenseTotalValue);
+  quickExpense.textContent=money(expenseTotalValue);
+
+  expenseList.innerHTML=trip.expenses.length
+    ? trip.expenses.map(exp=>`
+        <div class="expense">
+
+          <div>
+            <strong>${escapeHtml(exp.name)}</strong>
+            <div class="meta">
+              ${escapeHtml(exp.category)}
+            </div>
+          </div>
+
+          <div class="money">
+            ${money(exp.value)}
+          </div>
+
+          <button
+            class="delete"
+            onclick="deleteExpense('${exp.id}')">
+            ✕
+          </button>
+
+        </div>
+      `).join("")
+    : `<div class="empty">
+         Nenhum gasto lançado.
+       </div>`;
+
+  updateConnection();
+}
+
+window.setItemStatus=function(id,status){
+
+  const item=currentTrip().items.find(
+    item=>item.id===id
+  );
+
+  if(!item) return;
+
+  item.status=
+    item.status===status
+      ? "none"
+      : status;
+
+  save();
+  render();
+};
+
+window.deleteItem=function(id){
+
+  if(!confirm("Excluir este item?")) return;
+
+  currentTrip().items=
+    currentTrip().items.filter(
+      item=>item.id!==id
+    );
+
+  save();
+  render();
+};
+
+filters.addEventListener("click",event=>{
+
+  const button=event.target.closest(
+    "[data-category]"
+  );
+
+  if(!button) return;
+
+  currentCategory=button.dataset.category;
+
+  render();
+});
+
+searchInput.addEventListener("input",()=>{
+
+  searchText=searchInput.value.trim();
+
+  render();
+});
+
+function openScreen(name){
+
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>
+      screen.classList.remove("active")
+    );
+
+  const target=document.getElementById(
+    "screen"+name
+  );
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button=>
+      button.classList.toggle(
+        "active",
+        button.dataset.screen===name
+      )
+    );
+
+  addItemBtn.style.display=
+    name==="Checklist"
+      ? "block"
+      : "none";
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+window.openScreen=openScreen;
+
+document
+.querySelectorAll("nav button")
+.forEach(button=>{
+
+  button.addEventListener("click",()=>{
+
+    openScreen(button.dataset.screen);
+
+  });
+
+});
+
+addItemBtn.onclick=()=>{
+  itemDialog.showModal();
+};
+
+saveItemBtn.onclick=()=>{
+
+  const name=itemName.value.trim();
+
+  if(!name){
+    alert("Informe o nome do item.");
+    return;
+  }
+
+  currentTrip().items.push({
+    id:uid(),
+    name,
+    category:itemCategory.value,
+    qty:Math.max(
+      1,
+      Number(itemQty.value)||1
+    ),
+    note:itemNote.value.trim(),
+    person:itemPerson.value,
+    status:"none"
+  });
+
+  itemName.value="";
+  itemQty.value=1;
+  itemNote.value="";
+  itemPerson.value="";
+
+  save();
+  itemDialog.close();
+  render();
+};
+
+saveTripBtn.onclick=()=>{
+
+  const name=tripName.value.trim();
+
+  if(!name){
+    alert("Informe o nome da viagem.");
+    return;
+  }
+
+  const id=uid();
+
+  const copy=confirm(
+    "Deseja copiar o checklist da viagem atual?"
+  );
+
+  let newItems;
+
+  if(copy){
+
+    newItems=currentTrip().items.map(item=>({
+      ...item,
+      id:uid(),
+      status:"none"
+    }));
+
+  }else{
+
+    newItems=starterItems.map(
+      ([name,category])=>({
+        id:uid(),
+        name,
+        category,
+        qty:1,
+        note:"",
+        person:"",
+        status:"none"
+      })
+    );
+
+  }
+
+  db.trips.push({
+    id,
+    name,
+    date:newTripDate.value,
+    people:[],
+    expenses:[],
+    car:defaultCar.map(name=>({
+      id:uid(),
+      name,
+      done:false
+    })),
+    items:newItems
+  });
+
+  db.active=id;
+
+  tripName.value="";
+  newTripDate.value="";
+
+  save();
+  tripDialog.close();
+  render();
+};
+
+tripSelect.onchange=()=>{
+
+  db.active=tripSelect.value;
+
+  currentCategory="Todos";
+  searchText="";
+  searchInput.value="";
+
+  save();
+  render();
+};
+
+tripDate.onchange=()=>{
+
+  currentTrip().date=tripDate.value;
+
+  save();
+  render();
+};
+
+saveExpenseBtn.onclick=()=>{
+
+  const name=expenseName.value.trim();
+  const value=Number(expenseValue.value);
+
+  if(!name){
+    alert("Informe a descrição.");
+    return;
+  }
+
+  if(!value || value<=0){
+    alert("Informe um valor válido.");
+    return;
+  }
+
+  currentTrip().expenses.push({
+    id:uid(),
+    name,
+    value,
+    category:expenseCategory.value
+  });
+
+  expenseName.value="";
+  expenseValue.value="";
+
+  save();
+  expenseDialog.close();
+  render();
+};
+
+window.deleteExpense=function(id){
+
+  if(!confirm("Excluir este gasto?")) return;
+
+  currentTrip().expenses=
+    currentTrip().expenses.filter(
+      expense=>expense.id!==id
+    );
+
+  save();
+  render();
+};
+
+savePersonBtn.onclick=()=>{
+
+  const name=personName.value.trim();
+
+  if(!name){
+    alert("Informe o nome.");
+    return;
+  }
+
+  if(
+    currentTrip().people.some(
+      person=>
+        person.toLowerCase()===name.toLowerCase()
+    )
+  ){
+    alert("Essa pessoa já foi adicionada.");
+    return;
+  }
+
+  currentTrip().people.push(name);
+
+  personName.value="";
+
+  save();
+  personDialog.close();
+  render();
+};
+
+window.deletePerson=function(encodedName){
+
+  const name=decodeURIComponent(encodedName);
+
+  if(!confirm(`Remover ${name}?`)) return;
+
+  currentTrip().people=
+    currentTrip().people.filter(
+      person=>person!==name
+    );
+
+  currentTrip().items.forEach(item=>{
+    if(item.person===name){
+      item.person="";
+    }
+  });
+
+  save();
+  render();
+};
+
+window.toggleCar=function(id){
+
+  const car=currentTrip().car.find(
+    item=>item.id===id
+  );
+
+  if(!car) return;
+
+  car.done=!car.done;
+
+  save();
+  render();
+};
+
+window.toggleDark=function(){
+
+  db.dark=!db.dark;
+
+  save();
+  render();
+};
+
+window.resetStatuses=function(){
+
+  if(
+    !confirm(
+      "Deseja limpar todas as marcações desta viagem?"
+    )
+  ) return;
+
+  currentTrip().items.forEach(
+    item=>item.status="none"
+  );
+
+  currentTrip().car.forEach(
+    item=>item.done=false
+  );
+
+  save();
+  render();
+};
+
+window.exportBackup=function(){
+
+  const data=JSON.stringify(
+    db,
+    null,
+    2
+  );
+
+  const blob=new Blob(
+    [data],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="backup-camping.json";
+
+  document.body.appendChild(a);
+
+  a.click();
+
+  a.remove();
+
+  setTimeout(
+    ()=>URL.revokeObjectURL(url),
+    1000
+  );
+};
+
+function updateConnection(){
+
+  const online=navigator.onLine;
+
+  connectionStatus.textContent=
+    online
+      ? "● Online"
+      : "● Offline";
+
+  connectionStatus.style.background=
+    online
+      ? "rgba(255,255,255,.13)"
+      : "rgba(240,163,58,.25)";
+}
+
+window.addEventListener(
+  "online",
+  updateConnection
+);
+
+window.addEventListener(
+  "offline",
+  updateConnection
+);
+
+const progressMessageEl=
+  document.getElementById(
+    "progressMessage"
+  );
+
+if(
+  "serviceWorker" in navigator
+){
+
+  window.addEventListener(
+    "load",
+    ()=>{
+
+      navigator.serviceWorker.register(
+        "./service-worker.js"
+      ).catch(
+        error=>
+          console.log(
+            "Service Worker:",
+            error
+          )
+      );
+
+    }
+  );
+
+}
+
 render();
+openScreen("Home");
+
 </script>
+
 </body>
 </html>
