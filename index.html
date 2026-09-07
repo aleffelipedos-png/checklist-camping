@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
 <meta name="theme-color" content="#16382b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,602 +15,220 @@
 <title>Meu Camping</title>
 
 <style>
-
 :root{
-    --verde:#16382b;
-    --verde2:#245a43;
-    --verde3:#e8f2ed;
-    --fundo:#f4f6f4;
-    --card:#ffffff;
-    --texto:#17211c;
-    --cinza:#718078;
-    --borda:#dce5df;
-    --vermelho:#b42318;
-    --amarelo:#a56600;
-    --azul:#176b9d;
-    --sombra:0 8px 25px rgba(20,55,40,.09);
+  --verde:#16382b;
+  --verde2:#245a43;
+  --fundo:#f4f6f4;
+  --card:#ffffff;
+  --texto:#17211c;
+  --cinza:#718078;
+  --borda:#dce5df;
+  --vermelho:#b42318;
+  --amarelo:#a56600;
+  --azul:#176b9d;
+  --sombra:0 8px 25px rgba(20,55,40,.09);
 }
-
-*{
-    box-sizing:border-box;
-    -webkit-tap-highlight-color:transparent;
-}
-
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{
-    margin:0;
-    min-height:100%;
-    background:var(--fundo);
-    color:var(--texto);
-    font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  margin:0;min-height:100%;
+  background:var(--fundo);color:var(--texto);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif
 }
-
-body{
-    padding-bottom:90px;
-}
-
-button,input,select,textarea{
-    font:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-/* CABEÇALHO */
+body{padding-bottom:90px}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
 
 header{
-    background:linear-gradient(135deg,#102c21,#245a43);
-    color:white;
-    padding:
-        calc(18px + env(safe-area-inset-top))
-        18px
-        25px;
+  background:linear-gradient(135deg,#102c21,#245a43);
+  color:white;
+  padding:calc(18px + env(safe-area-inset-top)) 18px 25px;
 }
-
-.header-content{
-    max-width:800px;
-    margin:auto;
-}
-
-.header-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-}
-
-.logo{
-    display:flex;
-    gap:12px;
-    align-items:center;
-}
-
+.header-content{max-width:800px;margin:auto}
+.header-top{display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;gap:12px;align-items:center}
 .logo-icon{
-    width:48px;
-    height:48px;
-    background:rgba(255,255,255,.13);
-    border-radius:15px;
-    display:grid;
-    place-items:center;
-    font-size:27px;
+  width:48px;height:48px;background:rgba(255,255,255,.13);
+  border-radius:15px;display:grid;place-items:center;font-size:27px
 }
+.logo h1{margin:0;font-size:21px}
+.logo p{margin:3px 0 0;opacity:.75;font-size:12px}
 
-.logo h1{
-    margin:0;
-    font-size:21px;
-}
-
-.logo p{
-    margin:3px 0 0;
-    opacity:.75;
-    font-size:12px;
-}
-
-/* CONTEÚDO */
-
-main{
-    max-width:800px;
-    margin:auto;
-    padding:15px;
-}
-
-.screen{
-    display:none;
-}
-
-.screen.active{
-    display:block;
-}
+main{max-width:800px;margin:auto;padding:15px}
+.screen{display:none}
+.screen.active{display:block}
 
 .card{
-    background:var(--card);
-    border:1px solid var(--borda);
-    border-radius:20px;
-    padding:16px;
-    margin-bottom:13px;
-    box-shadow:var(--sombra);
+  background:var(--card);border:1px solid var(--borda);
+  border-radius:20px;padding:16px;margin-bottom:13px;box-shadow:var(--sombra)
 }
-
 .section-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    gap:10px;
-    margin-bottom:13px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;margin-bottom:13px
 }
-
-.section-title h2{
-    margin:0;
-    font-size:17px;
-}
-
+.section-title h2{margin:0;font-size:17px}
 .badge{
-    background:#edf2ef;
-    color:#53635a;
-    border-radius:999px;
-    padding:5px 9px;
-    font-size:11px;
-    font-weight:700;
+  background:#edf2ef;color:#53635a;border-radius:999px;
+  padding:5px 9px;font-size:11px;font-weight:700
 }
-
-/* PRÓXIMA VIAGEM */
 
 .trip-hero{
-    background:
-        linear-gradient(135deg,#173d2e,#2b684e);
-    color:white;
-    border:none;
+  background:linear-gradient(135deg,#173d2e,#2b684e);
+  color:white;border:none
 }
-
 .trip-label{
-    font-size:11px;
-    opacity:.7;
-    text-transform:uppercase;
-    letter-spacing:1px;
-    font-weight:700;
+  font-size:11px;opacity:.7;text-transform:uppercase;
+  letter-spacing:1px;font-weight:700
 }
-
-.trip-name{
-    font-size:25px;
-    font-weight:850;
-    margin-top:5px;
-}
-
-.trip-date{
-    margin-top:5px;
-    opacity:.85;
-    font-size:13px;
-}
-
+.trip-name{font-size:25px;font-weight:850;margin-top:5px}
+.trip-date{margin-top:5px;opacity:.85;font-size:13px}
 .countdown{
-    margin-top:16px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
+  margin-top:16px;display:flex;align-items:center;
+  justify-content:space-between;gap:12px
 }
-
 .days-box{
-    background:rgba(255,255,255,.12);
-    padding:10px 14px;
-    border-radius:14px;
+  background:rgba(255,255,255,.12);
+  padding:10px 14px;border-radius:14px
 }
-
-.days-box strong{
-    display:block;
-    font-size:22px;
-}
-
-.days-box span{
-    font-size:11px;
-    opacity:.8;
-}
-
-/* PROGRESSO */
+.days-box strong{display:block;font-size:22px}
+.days-box span{font-size:11px;opacity:.8}
 
 .progress-info{
-    display:flex;
-    justify-content:space-between;
-    margin-top:16px;
-    font-size:12px;
+  display:flex;justify-content:space-between;
+  margin-top:16px;font-size:12px
 }
-
 .progress{
-    height:10px;
-    background:rgba(255,255,255,.18);
-    border-radius:20px;
-    overflow:hidden;
-    margin-top:7px;
+  height:10px;background:rgba(255,255,255,.18);
+  border-radius:20px;overflow:hidden;margin-top:7px
 }
-
 .progress-bar{
-    height:100%;
-    background:#fff;
-    border-radius:20px;
-    width:0%;
-    transition:.3s;
+  height:100%;background:#fff;border-radius:20px;
+  width:0%;transition:.3s
 }
 
-/* ESTATÍSTICAS */
-
-.stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:8px;
-}
-
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .stat{
-    text-align:center;
-    background:#f4f7f5;
-    padding:12px 5px;
-    border-radius:14px;
+  text-align:center;background:#f4f7f5;
+  padding:12px 5px;border-radius:14px
 }
-
-.stat strong{
-    display:block;
-    font-size:20px;
-}
-
-.stat span{
-    font-size:10px;
-    color:var(--cinza);
-}
-
-/* FORM */
+.stat strong{display:block;font-size:20px}
+.stat span{font-size:10px;color:var(--cinza)}
 
 label{
-    font-size:11px;
-    color:var(--cinza);
-    display:block;
-    margin-bottom:5px;
-    font-weight:650;
+  font-size:11px;color:var(--cinza);display:block;
+  margin-bottom:5px;font-weight:650
 }
-
 input,select,textarea{
-    width:100%;
-    border:1px solid var(--borda);
-    background:white;
-    color:var(--texto);
-    border-radius:13px;
-    padding:12px;
-    outline:none;
+  width:100%;border:1px solid var(--borda);background:white;
+  color:var(--texto);border-radius:13px;padding:12px;outline:none
 }
+textarea{resize:vertical;min-height:75px}
+input:focus,select:focus,textarea:focus{border-color:var(--verde2)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-textarea{
-    resize:vertical;
-    min-height:75px;
-}
+.btn{border:none;border-radius:13px;padding:11px 14px;font-weight:750}
+.primary{background:var(--verde);color:white}
+.soft{background:#e9f0ec;color:var(--verde)}
+.danger{background:#fdebea;color:var(--vermelho)}
+.small{padding:8px 10px;font-size:11px}
 
-input:focus,
-select:focus,
-textarea:focus{
-    border-color:var(--verde2);
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-}
-
-/* BOTÕES */
-
-.btn{
-    border:none;
-    border-radius:13px;
-    padding:11px 14px;
-    font-weight:750;
-}
-
-.primary{
-    background:var(--verde);
-    color:white;
-}
-
-.soft{
-    background:#e9f0ec;
-    color:var(--verde);
-}
-
-.danger{
-    background:#fdebea;
-    color:var(--vermelho);
-}
-
-.blue{
-    background:#e5f2fa;
-    color:var(--azul);
-}
-
-.small{
-    padding:8px 10px;
-    font-size:11px;
-}
-
-/* FILTROS */
-
-.filters{
-    display:flex;
-    gap:7px;
-    overflow-x:auto;
-    padding-bottom:3px;
-}
-
-.filters::-webkit-scrollbar{
-    display:none;
-}
-
+.filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:3px}
+.filters::-webkit-scrollbar{display:none}
 .filter{
-    border:none;
-    border-radius:999px;
-    background:#edf2ef;
-    color:#58665e;
-    padding:9px 13px;
-    white-space:nowrap;
-    font-weight:700;
-    font-size:12px;
+  border:none;border-radius:999px;background:#edf2ef;
+  color:#58665e;padding:9px 13px;white-space:nowrap;
+  font-weight:700;font-size:12px
 }
+.filter.active{background:var(--verde);color:white}
 
-.filter.active{
-    background:var(--verde);
-    color:white;
-}
+.search{position:relative;margin-bottom:12px}
+.search input{padding-left:40px}
+.search span{position:absolute;left:14px;top:11px}
 
-/* PESQUISA */
-
-.search{
-    position:relative;
-    margin-bottom:12px;
-}
-
-.search input{
-    padding-left:40px;
-}
-
-.search span{
-    position:absolute;
-    left:14px;
-    top:11px;
-}
-
-/* ITEM */
-
-.item{
-    padding:14px 0;
-    border-top:1px solid #edf1ee;
-}
-
-.item:first-child{
-    border-top:none;
-}
-
-.item-top{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.item-name{
-    font-weight:800;
-    font-size:15px;
-}
-
-.item-meta{
-    color:var(--cinza);
-    font-size:11px;
-    margin-top:4px;
-}
-
+.item{padding:14px 0;border-top:1px solid #edf1ee}
+.item:first-child{border-top:none}
+.item-top{display:flex;justify-content:space-between;gap:10px}
+.item-name{font-weight:800;font-size:15px}
+.item-meta{color:var(--cinza);font-size:11px;margin-top:4px}
 .qty{
-    background:#edf2ef;
-    border-radius:999px;
-    padding:3px 7px;
-    font-size:10px;
+  background:#edf2ef;border-radius:999px;
+  padding:3px 7px;font-size:10px
 }
-
 .item-actions{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:6px;
-    margin-top:10px;
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:6px;margin-top:10px
 }
-
 .status{
-    border:none;
-    border-radius:11px;
-    padding:9px 4px;
-    font-size:11px;
-    background:#edf1ee;
-    color:#58655e;
-    font-weight:700;
+  border:none;border-radius:11px;padding:9px 4px;
+  font-size:11px;background:#edf1ee;color:#58655e;font-weight:700
 }
-
-.status.have.active{
-    background:#def3e6;
-    color:#146b3b;
-}
-
-.status.buy.active{
-    background:#fff0c9;
-    color:#916000;
-}
-
-.status.packed.active{
-    background:#dff1fb;
-    color:#176b9d;
-}
-
-.item-tools{
-    display:flex;
-    gap:5px;
-}
-
-/* VIAGENS */
+.status.have.active{background:#def3e6;color:#146b3b}
+.status.buy.active{background:#fff0c9;color:#916000}
+.status.packed.active{background:#dff1fb;color:#176b9d}
+.item-tools{display:flex;gap:5px}
 
 .trip-card{
-    border:1px solid var(--borda);
-    border-radius:17px;
-    padding:14px;
-    margin-bottom:10px;
+  border:1px solid var(--borda);
+  border-radius:17px;padding:14px;margin-bottom:10px
 }
-
 .trip-card.active-trip{
-    border:2px solid var(--verde2);
-    background:#f6faf8;
+  border:2px solid var(--verde2);
+  background:#f6faf8
 }
-
-.trip-card-top{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-}
-
-.trip-card-name{
-    font-weight:850;
-    font-size:16px;
-}
-
-.trip-card-date{
-    color:var(--cinza);
-    font-size:12px;
-    margin-top:4px;
-}
-
+.trip-card-top{display:flex;justify-content:space-between;gap:10px}
+.trip-card-name{font-weight:850;font-size:16px}
+.trip-card-date{color:var(--cinza);font-size:12px;margin-top:4px}
 .trip-buttons{
-    display:grid;
-    grid-template-columns:1fr auto auto;
-    gap:6px;
-    margin-top:12px;
+  display:grid;grid-template-columns:1fr auto auto;
+  gap:6px;margin-top:12px
 }
 
-/* EMPTY */
-
-.empty{
-    text-align:center;
-    color:var(--cinza);
-    padding:30px 10px;
-}
-
-.empty-icon{
-    font-size:35px;
-    margin-bottom:8px;
-}
-
-/* FAB */
+.empty{text-align:center;color:var(--cinza);padding:30px 10px}
+.empty-icon{font-size:35px;margin-bottom:8px}
 
 .fab{
-    position:fixed;
-    right:18px;
-    bottom:95px;
-    width:58px;
-    height:58px;
-    border:none;
-    border-radius:50%;
-    background:var(--verde);
-    color:white;
-    font-size:27px;
-    box-shadow:0 10px 30px rgba(22,56,43,.35);
-    z-index:20;
+  position:fixed;right:18px;bottom:95px;width:58px;height:58px;
+  border:none;border-radius:50%;background:var(--verde);color:white;
+  font-size:27px;box-shadow:0 10px 30px rgba(22,56,43,.35);z-index:20
 }
-
-/* MENU */
 
 nav{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    background:white;
-    border-top:1px solid var(--borda);
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    padding:
-        7px
-        5px
-        calc(7px + env(safe-area-inset-bottom));
-    z-index:30;
+  position:fixed;bottom:0;left:0;right:0;background:white;
+  border-top:1px solid var(--borda);display:grid;
+  grid-template-columns:repeat(4,1fr);
+  padding:7px 5px calc(7px + env(safe-area-inset-bottom));
+  z-index:30
 }
-
 nav button{
-    border:none;
-    background:none;
-    color:#78857e;
-    padding:5px;
-    font-size:10px;
+  border:none;background:none;color:#78857e;
+  padding:5px;font-size:10px
 }
-
-nav button.active{
-    color:var(--verde);
-    font-weight:800;
-}
-
-.nav-icon{
-    display:block;
-    font-size:21px;
-    margin-bottom:2px;
-}
-
-/* MODAL */
+nav button.active{color:var(--verde);font-weight:800}
+.nav-icon{display:block;font-size:21px;margin-bottom:2px}
 
 dialog{
-    border:none;
-    padding:0;
-    border-radius:22px;
-    width:min(92vw,550px);
-    box-shadow:0 25px 70px rgba(0,0,0,.3);
+  border:none;padding:0;border-radius:22px;
+  width:min(92vw,550px);box-shadow:0 25px 70px rgba(0,0,0,.3)
 }
-
-dialog::backdrop{
-    background:rgba(0,0,0,.55);
-}
-
-.modal{
-    padding:19px;
-}
-
-.modal h3{
-    margin:0 0 15px;
-}
-
+dialog::backdrop{background:rgba(0,0,0,.55)}
+.modal{padding:19px}
+.modal h3{margin:0 0 15px}
 .modal-actions{
-    display:flex;
-    justify-content:flex-end;
-    gap:7px;
-    margin-top:15px;
+  display:flex;justify-content:flex-end;
+  gap:7px;margin-top:15px
 }
-
 .copy-option{
-    background:#f4f7f5;
-    padding:12px;
-    border-radius:13px;
-    margin-top:10px;
+  background:#f4f7f5;padding:12px;border-radius:13px;margin-top:10px
 }
-
 .copy-option label{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    color:var(--texto);
-    margin:0;
+  display:flex;align-items:center;gap:8px;
+  color:var(--texto);margin:0
 }
-
-.copy-option input{
-    width:auto;
-}
-
-/* RESPONSIVO */
+.copy-option input{width:auto}
 
 @media(max-width:560px){
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-
+  .grid{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
 }
-
 </style>
 </head>
 
@@ -619,412 +236,259 @@ dialog::backdrop{
 
 <header>
 <div class="header-content">
-
-    <div class="header-top">
-
-        <div class="logo">
-
-            <div class="logo-icon">
-                🏕️
-            </div>
-
-            <div>
-                <h1>Meu Camping</h1>
-                <p>Planeje. Prepare. Aproveite.</p>
-            </div>
-
-        </div>
-
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">🏕️</div>
+      <div>
+        <h1>Meu Camping</h1>
+        <p>Planeje. Prepare. Aproveite.</p>
+      </div>
     </div>
-
+  </div>
 </div>
 </header>
 
 <main>
 
-<!-- INÍCIO -->
-
 <section id="screenHome" class="screen active">
 
-    <div class="card trip-hero">
+  <div class="card">
+    <div class="section-title">
+      <h2>📅 Selecionar acampamento</h2>
+    </div>
+    <label>Escolha a viagem/data</label>
+    <select id="homeTripSelect"></select>
+  </div>
 
-        <div class="trip-label">
-            Próxima viagem
-        </div>
+  <div class="card trip-hero">
+    <div class="trip-label">Viagem selecionada</div>
+    <div class="trip-name" id="homeTripName">Meu acampamento</div>
+    <div class="trip-date" id="homeTripDate"></div>
 
-        <div
-            class="trip-name"
-            id="homeTripName">
-            Meu acampamento
-        </div>
+    <div class="countdown">
+      <div class="days-box">
+        <strong id="daysNumber">--</strong>
+        <span id="daysText">dias restantes</span>
+      </div>
 
-        <div
-            class="trip-date"
-            id="homeTripDate">
-        </div>
-
-        <div class="countdown">
-
-            <div class="days-box">
-                <strong id="daysNumber">--</strong>
-                <span id="daysText">dias restantes</span>
-            </div>
-
-            <button
-                class="btn"
-                style="background:white;color:#173d2e"
-                onclick="openCurrentChecklist()">
-                Abrir checklist
-            </button>
-
-        </div>
-
-        <div class="progress-info">
-
-            <span>Preparação</span>
-
-            <strong id="progressText">
-                0%
-            </strong>
-
-        </div>
-
-        <div class="progress">
-            <div
-                class="progress-bar"
-                id="progressBar">
-            </div>
-        </div>
-
+      <button
+        class="btn"
+        style="background:white;color:#173d2e"
+        onclick="openCurrentChecklist()">
+        Abrir checklist
+      </button>
     </div>
 
-
-    <div class="card">
-
-        <div class="section-title">
-
-            <h2>Resumo</h2>
-
-            <span
-                class="badge"
-                id="summaryBadge">
-                0 itens
-            </span>
-
-        </div>
-
-        <div class="stats">
-
-            <div class="stat">
-                <strong id="statTotal">0</strong>
-                <span>Total</span>
-            </div>
-
-            <div class="stat">
-                <strong id="statHave">0</strong>
-                <span>Tenho</span>
-            </div>
-
-            <div class="stat">
-                <strong id="statBuy">0</strong>
-                <span>Comprar</span>
-            </div>
-
-            <div class="stat">
-                <strong id="statPacked">0</strong>
-                <span>Na mochila</span>
-            </div>
-
-        </div>
-
+    <div class="progress-info">
+      <span>Preparação</span>
+      <strong id="progressText">0%</strong>
     </div>
 
+    <div class="progress">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+  </div>
 
-    <div class="card">
-
-        <div class="section-title">
-
-            <h2>⚠️ Ainda falta</h2>
-
-            <span
-                class="badge"
-                id="pendingBadge">
-            </span>
-
-        </div>
-
-        <div id="homePending"></div>
-
+  <div class="card">
+    <div class="section-title">
+      <h2>Resumo</h2>
+      <span class="badge" id="summaryBadge">0 itens</span>
     </div>
 
+    <div class="stats">
+      <div class="stat">
+        <strong id="statTotal">0</strong>
+        <span>Total</span>
+      </div>
 
-    <div class="card">
+      <div class="stat">
+        <strong id="statHave">0</strong>
+        <span>Tenho</span>
+      </div>
 
-        <div class="section-title">
+      <div class="stat">
+        <strong id="statBuy">0</strong>
+        <span>Comprar</span>
+      </div>
 
-            <h2>📅 Próximas viagens</h2>
-
-            <button
-                class="btn primary small"
-                onclick="openNewTrip()">
-                + Agendar
-            </button>
-
-        </div>
-
-        <div id="homeTrips"></div>
-
+      <div class="stat">
+        <strong id="statPacked">0</strong>
+        <span>Na mochila</span>
+      </div>
     </div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h2>⚠️ Ainda falta</h2>
+      <span class="badge" id="pendingBadge"></span>
+    </div>
+
+    <div id="homePending"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h2>📅 Próximas viagens</h2>
+
+      <button
+        class="btn primary small"
+        onclick="openNewTrip()">
+        + Agendar
+      </button>
+    </div>
+
+    <div id="homeTrips"></div>
+  </div>
 
 </section>
-
-
-<!-- CHECKLIST -->
 
 <section id="screenChecklist" class="screen">
 
-    <div class="card">
+  <div class="card">
+    <div class="section-title">
+      <div>
+        <h2 id="checklistTripName">Checklist</h2>
+        <div class="item-meta" id="checklistTripDate"></div>
+      </div>
 
-        <div class="section-title">
-
-            <div>
-                <h2 id="checklistTripName">
-                    Checklist
-                </h2>
-
-                <div
-                    class="item-meta"
-                    id="checklistTripDate">
-                </div>
-            </div>
-
-            <span
-                class="badge"
-                id="checklistProgress">
-                0%
-            </span>
-
-        </div>
-
-        <div class="search">
-
-            <span>🔎</span>
-
-            <input
-                id="searchInput"
-                placeholder="Pesquisar item...">
-
-        </div>
-
-        <div
-            class="filters"
-            id="filters">
-        </div>
-
+      <span class="badge" id="checklistProgress">0%</span>
     </div>
 
-
-    <div class="card">
-
-        <div class="section-title">
-
-            <h2 id="listTitle">
-                Todos os itens
-            </h2>
-
-            <span
-                class="badge"
-                id="listBadge">
-            </span>
-
-        </div>
-
-        <div id="items"></div>
-
+    <div class="search">
+      <span>🔎</span>
+      <input id="searchInput" placeholder="Pesquisar item...">
     </div>
+
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-title">
+      <h2 id="listTitle">Todos os itens</h2>
+      <span class="badge" id="listBadge"></span>
+    </div>
+
+    <div id="items"></div>
+  </div>
 
 </section>
-
-
-<!-- COMPRAS -->
 
 <section id="screenShopping" class="screen">
 
-    <div class="card">
-
-        <div class="section-title">
-
-            <h2>🛒 Lista de compras</h2>
-
-            <span
-                class="badge"
-                id="shoppingBadge">
-            </span>
-
-        </div>
-
-        <div id="shoppingList"></div>
-
+  <div class="card">
+    <div class="section-title">
+      <h2>🛒 Lista de compras</h2>
+      <span class="badge" id="shoppingBadge"></span>
     </div>
+
+    <div id="shoppingList"></div>
+  </div>
 
 </section>
 
-
-<!-- VIAGENS -->
-
 <section id="screenTrips" class="screen">
 
-    <div class="card">
+  <div class="card">
 
-        <div class="section-title">
+    <div class="section-title">
 
-            <h2>🏕️ Meus acampamentos</h2>
-
-            <button
-                class="btn primary small"
-                onclick="openNewTrip()">
-                + Nova viagem
-            </button>
-
+      <div>
+        <h2>🏕️ Meus acampamentos</h2>
+        <div class="item-meta">
+          Todos os acampamentos agendados ficam salvos aqui
         </div>
+      </div>
 
-        <div id="tripList"></div>
+      <button
+        class="btn primary small"
+        onclick="openNewTrip()">
+        + Agendar
+      </button>
 
     </div>
+
+    <div id="tripList"></div>
+
+  </div>
 
 </section>
 
 </main>
 
-
 <button
-    class="fab"
-    id="addItemBtn"
-    title="Adicionar item">
-    +
+  class="fab"
+  id="addItemBtn"
+  title="Adicionar item">
+  +
 </button>
-
 
 <nav>
 
-<button
-    data-screen="Home"
-    class="active">
-
-    <span class="nav-icon">
-        🏠
-    </span>
-
-    Início
-
+<button data-screen="Home" class="active">
+  <span class="nav-icon">🏠</span>
+  Início
 </button>
-
 
 <button data-screen="Checklist">
-
-    <span class="nav-icon">
-        ✅
-    </span>
-
-    Checklist
-
+  <span class="nav-icon">✅</span>
+  Checklist
 </button>
-
 
 <button data-screen="Shopping">
-
-    <span class="nav-icon">
-        🛒
-    </span>
-
-    Comprar
-
+  <span class="nav-icon">🛒</span>
+  Comprar
 </button>
 
-
 <button data-screen="Trips">
-
-    <span class="nav-icon">
-        ⛺
-    </span>
-
-    Viagens
-
+  <span class="nav-icon">⛺</span>
+  Viagens
 </button>
 
 </nav>
-
-
-<!-- MODAL ITEM -->
 
 <dialog id="itemDialog">
 
 <div class="modal">
 
-<h3 id="itemModalTitle">
-    Adicionar item
-</h3>
+<h3 id="itemModalTitle">Adicionar item</h3>
 
 <div class="grid">
 
 <div>
-
 <label>Item</label>
-
-<input
-    id="itemName"
-    placeholder="Ex.: Lanterna">
-
+<input id="itemName" placeholder="Ex.: Lanterna">
 </div>
 
-
 <div>
-
 <label>Categoria</label>
-
 <select id="itemCategory"></select>
-
 </div>
 
-
 <div>
-
 <label>Quantidade</label>
-
-<input
-    id="itemQty"
-    type="number"
-    min="1"
-    value="1">
-
+<input id="itemQty" type="number" min="1" value="1">
 </div>
-
 
 <div>
-
 <label>Observação</label>
-
-<input
-    id="itemNote"
-    placeholder="Opcional">
-
+<input id="itemNote" placeholder="Opcional">
 </div>
 
 </div>
-
 
 <div class="modal-actions">
 
 <button
-    class="btn soft"
-    onclick="itemDialog.close()">
-    Cancelar
+  class="btn soft"
+  onclick="itemDialog.close()">
+  Cancelar
 </button>
 
 <button
-    class="btn primary"
-    id="saveItemBtn">
-    Salvar
+  class="btn primary"
+  id="saveItemBtn">
+  Salvar
 </button>
 
 </div>
@@ -1032,97 +496,58 @@ dialog::backdrop{
 </div>
 
 </dialog>
-
-
-<!-- MODAL VIAGEM -->
 
 <dialog id="tripDialog">
 
 <div class="modal">
 
-<h3 id="tripModalTitle">
-    Novo acampamento
-</h3>
-
+<h3 id="tripModalTitle">Novo acampamento</h3>
 
 <div class="grid">
 
 <div>
-
 <label>Nome da viagem</label>
-
-<input
-    id="tripName"
-    placeholder="Ex.: Camping em Foz">
-
+<input id="tripName" placeholder="Ex.: Camping em Foz">
 </div>
 
-
 <div>
-
 <label>Data</label>
-
-<input
-    id="tripDate"
-    type="date">
-
+<input id="tripDate" type="date">
 </div>
 
-
 <div>
-
 <label>Local</label>
-
-<input
-    id="tripLocation"
-    placeholder="Ex.: Foz do Iguaçu">
-
+<input id="tripLocation" placeholder="Ex.: Foz do Iguaçu">
 </div>
-
 
 <div>
-
 <label>Quantidade de pessoas</label>
-
-<input
-    id="tripPeople"
-    type="number"
-    min="1"
-    value="1">
-
+<input id="tripPeople" type="number" min="1" value="1">
 </div>
 
 </div>
-
 
 <div class="copy-option">
 
 <label>
-
-<input
-    type="checkbox"
-    id="copyCurrent"
-    checked>
-
+<input type="checkbox" id="copyCurrent" checked>
 Copiar checklist da viagem atual
-
 </label>
 
 </div>
 
-
 <div class="modal-actions">
 
 <button
-    class="btn soft"
-    onclick="tripDialog.close()">
-    Cancelar
+  class="btn soft"
+  onclick="tripDialog.close()">
+  Cancelar
 </button>
 
 <button
-    class="btn primary"
-    id="saveTripBtn">
-    Salvar viagem
+  class="btn primary"
+  id="saveTripBtn">
+  Salvar viagem
 </button>
 
 </div>
@@ -1131,1557 +556,946 @@ Copiar checklist da viagem atual
 
 </dialog>
 
-
 <script>
 
-/* ================================
-   CATEGORIAS
-================================ */
-
 const categories = [
-
-"Todos",
-"Acampamento",
-"Cozinha",
-"Alimentos",
-"Roupas",
-"Equipamentos",
-"Higiene",
-"Primeiros socorros",
-"Lazer",
-"Carro/viagem"
-
+  "Todos",
+  "Acampamento",
+  "Cozinha",
+  "Alimentos",
+  "Roupas",
+  "Equipamentos",
+  "Higiene",
+  "Primeiros socorros",
+  "Lazer",
+  "Carro/viagem"
 ];
-
-
-/* ================================
-   CHECKLIST PADRÃO
-================================ */
 
 const starterItems = [
+  ["Barraca","Acampamento"],
+  ["Lona","Acampamento"],
+  ["Estacas","Acampamento"],
+  ["Martelo","Acampamento"],
+  ["Colchão","Acampamento"],
+  ["Bomba de ar","Acampamento"],
+  ["Saco de dormir","Acampamento"],
+  ["Travesseiro","Acampamento"],
 
-["Barraca","Acampamento"],
-["Lona","Acampamento"],
-["Estacas","Acampamento"],
-["Martelo","Acampamento"],
-["Colchão","Acampamento"],
-["Bomba de ar","Acampamento"],
-["Saco de dormir","Acampamento"],
-["Travesseiro","Acampamento"],
+  ["Fogareiro","Cozinha"],
+  ["Gás","Cozinha"],
+  ["Panela","Cozinha"],
+  ["Frigideira","Cozinha"],
+  ["Pratos","Cozinha"],
+  ["Copos","Cozinha"],
+  ["Talheres","Cozinha"],
+  ["Faca","Cozinha"],
+  ["Tábua","Cozinha"],
+  ["Isqueiro","Cozinha"],
+  ["Detergente","Cozinha"],
+  ["Esponja","Cozinha"],
+  ["Pano de prato","Cozinha"],
+  ["Sacos de lixo","Cozinha"],
 
-["Fogareiro","Cozinha"],
-["Gás","Cozinha"],
-["Panela","Cozinha"],
-["Frigideira","Cozinha"],
-["Pratos","Cozinha"],
-["Copos","Cozinha"],
-["Talheres","Cozinha"],
-["Faca","Cozinha"],
-["Tábua","Cozinha"],
-["Isqueiro","Cozinha"],
-["Detergente","Cozinha"],
-["Esponja","Cozinha"],
-["Pano de prato","Cozinha"],
-["Sacos de lixo","Cozinha"],
+  ["Água","Alimentos"],
+  ["Café","Alimentos"],
+  ["Açúcar","Alimentos"],
+  ["Sal","Alimentos"],
+  ["Pão","Alimentos"],
+  ["Gelo","Alimentos"],
+  ["Carne","Alimentos"],
+  ["Bebidas","Alimentos"],
+  ["Lanches","Alimentos"],
 
-["Água","Alimentos"],
-["Café","Alimentos"],
-["Açúcar","Alimentos"],
-["Sal","Alimentos"],
-["Pão","Alimentos"],
-["Gelo","Alimentos"],
-["Carne","Alimentos"],
-["Bebidas","Alimentos"],
-["Lanches","Alimentos"],
+  ["Camisetas","Roupas"],
+  ["Bermuda","Roupas"],
+  ["Calça","Roupas"],
+  ["Roupa íntima","Roupas"],
+  ["Meias","Roupas"],
+  ["Chinelo","Roupas"],
+  ["Tênis","Roupas"],
+  ["Casaco","Roupas"],
+  ["Roupa de banho","Roupas"],
 
-["Camisetas","Roupas"],
-["Bermuda","Roupas"],
-["Calça","Roupas"],
-["Roupa íntima","Roupas"],
-["Meias","Roupas"],
-["Chinelo","Roupas"],
-["Tênis","Roupas"],
-["Casaco","Roupas"],
-["Roupa de banho","Roupas"],
+  ["Lanterna","Equipamentos"],
+  ["Pilhas","Equipamentos"],
+  ["Power bank","Equipamentos"],
+  ["Carregadores","Equipamentos"],
+  ["Extensão","Equipamentos"],
+  ["Corda","Equipamentos"],
 
-["Lanterna","Equipamentos"],
-["Pilhas","Equipamentos"],
-["Power bank","Equipamentos"],
-["Carregadores","Equipamentos"],
-["Extensão","Equipamentos"],
-["Corda","Equipamentos"],
+  ["Escova de dentes","Higiene"],
+  ["Pasta de dentes","Higiene"],
+  ["Papel higiênico","Higiene"],
+  ["Toalha","Higiene"],
+  ["Sabonete","Higiene"],
+  ["Shampoo","Higiene"],
+  ["Repelente","Higiene"],
+  ["Protetor solar","Higiene"],
 
-["Escova de dentes","Higiene"],
-["Pasta de dentes","Higiene"],
-["Papel higiênico","Higiene"],
-["Toalha","Higiene"],
-["Sabonete","Higiene"],
-["Shampoo","Higiene"],
-["Repelente","Higiene"],
-["Protetor solar","Higiene"],
+  ["Kit primeiros socorros","Primeiros socorros"],
+  ["Remédios pessoais","Primeiros socorros"],
+  ["Curativos","Primeiros socorros"],
 
-["Kit primeiros socorros","Primeiros socorros"],
-["Remédios pessoais","Primeiros socorros"],
-["Curativos","Primeiros socorros"],
+  ["Cadeira","Lazer"],
+  ["Mesa","Lazer"],
+  ["Caixa de som","Lazer"],
+  ["Jogos","Lazer"],
 
-["Cadeira","Lazer"],
-["Mesa","Lazer"],
-["Caixa de som","Lazer"],
-["Jogos","Lazer"],
-
-["Documentos","Carro/viagem"],
-["Combustível","Carro/viagem"],
-["Calibrar pneus","Carro/viagem"]
-
+  ["Documentos","Carro/viagem"],
+  ["Combustível","Carro/viagem"],
+  ["Calibrar pneus","Carro/viagem"]
 ];
 
-
-/* ================================
-   ID
-================================ */
-
 function uid(){
-
-    if(window.crypto &&
-       typeof window.crypto.randomUUID === "function"){
-
-        return crypto.randomUUID();
-
-    }
-
-    return Date.now().toString(36) +
-           Math.random().toString(36).substring(2);
-
+  if(window.crypto && typeof window.crypto.randomUUID === "function"){
+    return crypto.randomUUID();
+  }
+  return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
-
-
-/* ================================
-   CRIAR CHECKLIST
-================================ */
 
 function createStarterItems(){
-
-    return starterItems.map(([name,category])=>({
-
-        id:uid(),
-        name,
-        category,
-        qty:1,
-        note:"",
-        status:"none"
-
-    }));
-
+  return starterItems.map(([name,category])=>({
+    id:uid(),
+    name,
+    category,
+    qty:1,
+    note:"",
+    status:"none"
+  }));
 }
 
-
-/* ================================
-   BANCO LOCAL
-================================ */
-
-const STORAGE_KEY="campingPWA_v3";
+const STORAGE_KEY="campingPWA_v4";
 
 let db;
 
 try{
-
-    db=JSON.parse(
-        localStorage.getItem(STORAGE_KEY)
-    );
-
+  db=JSON.parse(localStorage.getItem(STORAGE_KEY));
 }catch(e){
-
-    db=null;
-
+  db=null;
 }
-
-
-/* MIGRAR BANCO ANTIGO */
 
 if(!db){
-
-    try{
-
-        const old=JSON.parse(
-            localStorage.getItem("campingPWA")
-        );
-
-        if(old && old.trips){
-
-            db=old;
-
-        }
-
-    }catch(e){}
-
+  try{
+    const previousV3=JSON.parse(localStorage.getItem("campingPWA_v3"));
+    if(previousV3 && previousV3.trips){
+      db=previousV3;
+    }
+  }catch(e){}
 }
 
-
-/* CRIAR BANCO */
+if(!db){
+  try{
+    const old=JSON.parse(localStorage.getItem("campingPWA"));
+    if(old && old.trips){
+      db=old;
+    }
+  }catch(e){}
+}
 
 if(!db || !Array.isArray(db.trips)){
+  const firstId=uid();
 
-    const firstId=uid();
-
-    db={
-
-        active:firstId,
-
-        trips:[{
-
-            id:firstId,
-            name:"Meu primeiro acampamento",
-            date:"",
-            location:"",
-            people:1,
-            createdAt:Date.now(),
-            items:createStarterItems()
-
-        }]
-
-    };
-
+  db={
+    active:firstId,
+    trips:[{
+      id:firstId,
+      name:"Meu primeiro acampamento",
+      date:"",
+      location:"",
+      people:1,
+      createdAt:Date.now(),
+      items:createStarterItems()
+    }]
+  };
 }
-
-
-/* NORMALIZA DADOS ANTIGOS */
 
 db.trips.forEach(trip=>{
+  if(!trip.location) trip.location="";
+  if(!trip.people) trip.people=1;
+  if(!trip.createdAt) trip.createdAt=Date.now();
+  if(!Array.isArray(trip.items)) trip.items=createStarterItems();
 
-    if(!trip.location)
-        trip.location="";
-
-    if(!trip.people)
-        trip.people=1;
-
-    if(!trip.createdAt)
-        trip.createdAt=Date.now();
-
-    if(!Array.isArray(trip.items))
-        trip.items=createStarterItems();
-
+  trip.items.forEach(item=>{
+    if(!item.id) item.id=uid();
+    if(!item.category) item.category="Equipamentos";
+    if(!item.qty) item.qty=1;
+    if(item.note===undefined) item.note="";
+    if(!item.status) item.status="none";
+  });
 });
 
-
-if(!db.active ||
-   !db.trips.some(x=>x.id===db.active)){
-
-    db.active=db.trips[0].id;
-
+if(!db.active || !db.trips.some(x=>x.id===db.active)){
+  db.active=db.trips[0].id;
 }
-
-
-/* ================================
-   SALVAR
-================================ */
 
 function save(){
-
-    try{
-
-        localStorage.setItem(
-            STORAGE_KEY,
-            JSON.stringify(db)
-        );
-
-    }catch(error){
-
-        alert(
-            "Não foi possível salvar os dados no celular."
-        );
-
-        console.error(error);
-
-    }
-
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+  }catch(error){
+    alert("Não foi possível salvar os dados no celular.");
+    console.error(error);
+  }
 }
-
-
-/* ================================
-   VIAGEM ATUAL
-================================ */
 
 function currentTrip(){
-
-    return db.trips.find(
-        x=>x.id===db.active
-    );
-
+  return db.trips.find(x=>x.id===db.active);
 }
-
-
-/* ================================
-   SEGURANÇA HTML
-================================ */
 
 function esc(value){
-
-    return String(value ?? "")
-        .replace(
-            /[&<>"']/g,
-            m=>({
-                "&":"&amp;",
-                "<":"&lt;",
-                ">":"&gt;",
-                '"':"&quot;",
-                "'":"&#039;"
-            }[m])
-        );
-
+  return String(value ?? "").replace(
+    /[&<>"']/g,
+    m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[m])
+  );
 }
-
-
-/* ================================
-   DATA
-================================ */
 
 function formatDate(value){
-
-    if(!value)
-        return "Data ainda não definida";
-
-    const [y,m,d]=value.split("-");
-
-    return `${d}/${m}/${y}`;
-
+  if(!value) return "Data ainda não definida";
+  const [y,m,d]=value.split("-");
+  return `${d}/${m}/${y}`;
 }
-
-
-/* ================================
-   DIAS
-================================ */
 
 function daysUntil(value){
+  if(!value) return null;
 
-    if(!value)
-        return null;
+  const [y,m,d]=value.split("-").map(Number);
 
-    const [y,m,d]=value.split("-").map(Number);
+  const target=new Date(y,m-1,d,12,0,0);
+  const now=new Date();
+  const today=new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    12,0,0
+  );
 
-    const target=new Date(
-        y,
-        m-1,
-        d,
-        12,0,0
-    );
-
-    const now=new Date();
-
-    const today=new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        12,0,0
-    );
-
-    return Math.ceil(
-        (target-today)/86400000
-    );
-
+  return Math.ceil((target-today)/86400000);
 }
 
-
-/* ================================
-   STATUS ITEM
-================================ */
-
 window.setStatus=function(id,status){
+  const item=currentTrip().items.find(x=>x.id===id);
+  if(!item) return;
 
-    const item=currentTrip().items.find(
-        x=>x.id===id
-    );
+  item.status=item.status===status ? "none" : status;
 
-    if(!item)
-        return;
-
-    item.status=
-        item.status===status
-        ?"none"
-        :status;
-
-    save();
-    render();
-
+  save();
+  render();
 };
-
-
-/* ================================
-   EXCLUIR ITEM
-================================ */
 
 window.deleteItem=function(id){
+  if(!confirm("Deseja excluir este item do checklist?")) return;
 
-    if(!confirm(
-        "Deseja excluir este item do checklist?"
-    ))
-        return;
+  currentTrip().items=currentTrip().items.filter(x=>x.id!==id);
 
-    currentTrip().items=
-        currentTrip().items.filter(
-            x=>x.id!==id
-        );
-
-    save();
-    render();
-
+  save();
+  render();
 };
-
-
-/* ================================
-   EDITAR ITEM
-================================ */
 
 let editingItemId=null;
 
 window.editItem=function(id){
+  const item=currentTrip().items.find(x=>x.id===id);
+  if(!item) return;
 
-    const item=currentTrip().items.find(
-        x=>x.id===id
-    );
+  editingItemId=id;
 
-    if(!item)
-        return;
+  itemModalTitle.textContent="Editar item";
+  itemName.value=item.name;
+  itemCategory.value=item.category;
+  itemQty.value=item.qty;
+  itemNote.value=item.note || "";
 
-    editingItemId=id;
-
-    itemModalTitle.textContent="Editar item";
-
-    itemName.value=item.name;
-    itemCategory.value=item.category;
-    itemQty.value=item.qty;
-    itemNote.value=item.note || "";
-
-    itemDialog.showModal();
-
+  itemDialog.showModal();
 };
 
-
-/* ================================
-   HTML ITEM
-================================ */
-
 function itemHTML(item,tools=true){
+  return `
+  <div class="item">
 
-    return `
+    <div class="item-top">
 
-    <div class="item">
+      <div>
 
-        <div class="item-top">
-
-            <div>
-
-                <div class="item-name">
-
-                    ${esc(item.name)}
-
-                    ${
-                        item.qty>1
-                        ?`<span class="qty">x${item.qty}</span>`
-                        :""
-                    }
-
-                </div>
-
-                <div class="item-meta">
-
-                    ${esc(item.category)}
-
-                    ${
-                        item.note
-                        ?` • ${esc(item.note)}`
-                        :""
-                    }
-
-                </div>
-
-            </div>
-
-            ${
-                tools
-                ?`
-
-                <div class="item-tools">
-
-                    <button
-                        class="btn soft small"
-                        onclick="editItem('${item.id}')">
-                        ✏️
-                    </button>
-
-                    <button
-                        class="btn danger small"
-                        onclick="deleteItem('${item.id}')">
-                        🗑️
-                    </button>
-
-                </div>
-
-                `
-                :""
-            }
-
+        <div class="item-name">
+          ${esc(item.name)}
+          ${
+            item.qty>1
+            ? `<span class="qty">x${item.qty}</span>`
+            : ""
+          }
         </div>
 
+        <div class="item-meta">
+          ${esc(item.category)}
+          ${
+            item.note
+            ? ` • ${esc(item.note)}`
+            : ""
+          }
+        </div>
 
-        <div class="item-actions">
+      </div>
 
-            <button
-                class="status have ${
-                    item.status==="have"
-                    ?"active"
-                    :""
-                }"
-                onclick="setStatus('${item.id}','have')">
+      ${
+        tools
+        ? `
+        <div class="item-tools">
 
-                ✓ Tenho
+          <button
+            class="btn soft small"
+            onclick="editItem('${item.id}')">
+            ✏️
+          </button>
 
-            </button>
-
-
-            <button
-                class="status buy ${
-                    item.status==="buy"
-                    ?"active"
-                    :""
-                }"
-                onclick="setStatus('${item.id}','buy')">
-
-                🛒 Comprar
-
-            </button>
-
-
-            <button
-                class="status packed ${
-                    item.status==="packed"
-                    ?"active"
-                    :""
-                }"
-                onclick="setStatus('${item.id}','packed')">
-
-                🎒 Na mochila
-
-            </button>
+          <button
+            class="btn danger small"
+            onclick="deleteItem('${item.id}')">
+            🗑️
+          </button>
 
         </div>
+        `
+        : ""
+      }
 
     </div>
 
-    `;
+    <div class="item-actions">
 
+      <button
+        class="status have ${item.status==="have"?"active":""}"
+        onclick="setStatus('${item.id}','have')">
+        ✓ Tenho
+      </button>
+
+      <button
+        class="status buy ${item.status==="buy"?"active":""}"
+        onclick="setStatus('${item.id}','buy')">
+        🛒 Comprar
+      </button>
+
+      <button
+        class="status packed ${item.status==="packed"?"active":""}"
+        onclick="setStatus('${item.id}','packed')">
+        🎒 Na mochila
+      </button>
+
+    </div>
+
+  </div>
+  `;
 }
-
-
-/* ================================
-   FILTRO
-================================ */
 
 let selectedCategory="Todos";
 let searchText="";
 
+filters.addEventListener("click",event=>{
+  const button=event.target.closest("[data-category]");
+  if(!button) return;
 
-filters.addEventListener(
-    "click",
-    event=>{
+  selectedCategory=button.dataset.category;
+  render();
+});
 
-        const button=
-            event.target.closest("[data-category]");
-
-        if(!button)
-            return;
-
-        selectedCategory=
-            button.dataset.category;
-
-        render();
-
-    }
-);
-
-
-searchInput.addEventListener(
-    "input",
-    ()=>{
-
-        searchText=
-            searchInput.value
-            .trim()
-            .toLowerCase();
-
-        renderChecklist();
-
-    }
-);
-
-
-/* ================================
-   RENDER CHECKLIST
-================================ */
+searchInput.addEventListener("input",()=>{
+  searchText=searchInput.value.trim().toLowerCase();
+  renderChecklist();
+});
 
 function renderChecklist(){
+  const trip=currentTrip();
+  if(!trip) return;
 
-    const trip=currentTrip();
+  checklistTripName.textContent=trip.name;
+  checklistTripDate.textContent=formatDate(trip.date);
 
-    if(!trip)
-        return;
+  filters.innerHTML=categories.map(category=>`
+    <button
+      class="filter ${category===selectedCategory?"active":""}"
+      data-category="${esc(category)}">
+      ${esc(category)}
+    </button>
+  `).join("");
 
-    checklistTripName.textContent=
-        trip.name;
+  let list=[...trip.items];
 
-    checklistTripDate.textContent=
-        formatDate(trip.date);
+  if(selectedCategory!=="Todos"){
+    list=list.filter(item=>item.category===selectedCategory);
+  }
 
+  if(searchText){
+    list=list.filter(item=>
+      item.name.toLowerCase().includes(searchText)
+      ||
+      item.category.toLowerCase().includes(searchText)
+      ||
+      (item.note || "").toLowerCase().includes(searchText)
+    );
+  }
 
-    filters.innerHTML=
-        categories.map(category=>`
+  listTitle.textContent=
+    selectedCategory==="Todos"
+    ? "Todos os itens"
+    : selectedCategory;
 
-        <button
-            class="filter ${
-                category===selectedCategory
-                ?"active"
-                :""
-            }"
-            data-category="${esc(category)}">
+  listBadge.textContent=`${list.length} itens`;
 
-            ${esc(category)}
+  items.innerHTML=
+    list.length
+    ? list.map(item=>itemHTML(item,true)).join("")
+    : `
+      <div class="empty">
+        <div class="empty-icon">🔎</div>
+        Nenhum item encontrado.
+      </div>
+    `;
 
-        </button>
+  const packed=trip.items.filter(x=>x.status==="packed").length;
 
-        `).join("");
+  const pct=
+    trip.items.length
+    ? Math.round(packed/trip.items.length*100)
+    : 0;
 
-
-    let list=[...trip.items];
-
-
-    if(selectedCategory!=="Todos"){
-
-        list=list.filter(
-            item=>
-                item.category===selectedCategory
-        );
-
-    }
-
-
-    if(searchText){
-
-        list=list.filter(item=>
-
-            item.name
-                .toLowerCase()
-                .includes(searchText)
-
-            ||
-
-            item.category
-                .toLowerCase()
-                .includes(searchText)
-
-            ||
-
-            (item.note || "")
-                .toLowerCase()
-                .includes(searchText)
-
-        );
-
-    }
-
-
-    listTitle.textContent=
-        selectedCategory==="Todos"
-        ?"Todos os itens"
-        :selectedCategory;
-
-
-    listBadge.textContent=
-        `${list.length} itens`;
-
-
-    items.innerHTML=
-        list.length
-        ?list.map(
-            item=>itemHTML(item,true)
-        ).join("")
-        :`
-
-        <div class="empty">
-
-            <div class="empty-icon">🔎</div>
-
-            Nenhum item encontrado.
-
-        </div>
-
-        `;
-
-
-    const packed=
-        trip.items.filter(
-            x=>x.status==="packed"
-        ).length;
-
-    const pct=
-        trip.items.length
-        ?Math.round(
-            packed/trip.items.length*100
-        )
-        :0;
-
-    checklistProgress.textContent=
-        pct+"%";
-
+  checklistProgress.textContent=pct+"%";
 }
-
-
-/* ================================
-   RENDER COMPRAS
-================================ */
 
 function renderShopping(){
+  const shopping=currentTrip().items.filter(x=>x.status==="buy");
 
-    const shopping=
-        currentTrip().items.filter(
-            x=>x.status==="buy"
-        );
+  shoppingBadge.textContent=`${shopping.length} itens`;
 
-    shoppingBadge.textContent=
-        `${shopping.length} itens`;
-
-
-    shoppingList.innerHTML=
-        shopping.length
-        ?shopping.map(
-            item=>itemHTML(item,false)
-        ).join("")
-        :`
-
-        <div class="empty">
-
-            <div class="empty-icon">🛒</div>
-
-            Sua lista de compras está vazia.
-
-        </div>
-
-        `;
-
+  shoppingList.innerHTML=
+    shopping.length
+    ? shopping.map(item=>itemHTML(item,false)).join("")
+    : `
+      <div class="empty">
+        <div class="empty-icon">🛒</div>
+        Sua lista de compras está vazia.
+      </div>
+    `;
 }
 
-
-/* ================================
-   CARD VIAGEM
-================================ */
-
 function tripCardHTML(trip){
+  const total=trip.items.length;
+  const packed=trip.items.filter(item=>item.status==="packed").length;
+  const buy=trip.items.filter(item=>item.status==="buy").length;
 
-    const total=trip.items.length;
+  const pct=
+    total
+    ? Math.round(packed/total*100)
+    : 0;
 
-    const packed=
-        trip.items.filter(
-            x=>x.status==="packed"
-        ).length;
+  const days=daysUntil(trip.date);
 
-    const pct=
-        total
-        ?Math.round(packed/total*100)
-        :0;
+  let daysLabel="";
 
-    return `
+  if(days===0){
+    daysLabel="🏕️ Hoje";
+  }else if(days===1){
+    daysLabel="⏳ Amanhã";
+  }else if(days>1){
+    daysLabel=`⏳ Faltam ${days} dias`;
+  }else if(days<0){
+    daysLabel="✓ Viagem realizada";
+  }
 
-    <div class="
-        trip-card
+  return `
+  <div class="
+    trip-card
+    ${trip.id===db.active ? "active-trip" : ""}
+  ">
+
+    <div class="trip-card-top">
+
+      <div>
+
+        <div class="trip-card-name">
+          ${trip.id===db.active ? "⭐ " : ""}
+          ${esc(trip.name)}
+        </div>
+
+        <div class="trip-card-date">
+          📅 ${formatDate(trip.date)}
+        </div>
+
         ${
-            trip.id===db.active
-            ?"active-trip"
-            :""
-        }
-    ">
-
-        <div class="trip-card-top">
-
-            <div>
-
-                <div class="trip-card-name">
-
-                    ${
-                        trip.id===db.active
-                        ?"⭐ "
-                        :""
-                    }
-
-                    ${esc(trip.name)}
-
-                </div>
-
-                <div class="trip-card-date">
-
-                    📅 ${formatDate(trip.date)}
-
-                    ${
-                        trip.location
-                        ?` • 📍 ${esc(trip.location)}`
-                        :""
-                    }
-
-                </div>
-
-                <div class="item-meta">
-
-                    ${packed}/${total}
-                    preparados • ${pct}%
-
-                </div>
-
+          trip.location
+          ? `
+            <div class="trip-card-date">
+              📍 ${esc(trip.location)}
             </div>
+          `
+          : ""
+        }
 
+        <div class="trip-card-date">
+          👥 ${trip.people || 1}
+          ${Number(trip.people)===1 ? " pessoa" : " pessoas"}
         </div>
 
+        ${
+          daysLabel
+          ? `
+            <div
+              class="item-meta"
+              style="margin-top:7px;font-weight:700">
+              ${daysLabel}
+            </div>
+          `
+          : ""
+        }
 
-        <div class="trip-buttons">
-
-            <button
-                class="btn primary small"
-                onclick="openTrip('${trip.id}')">
-
-                Abrir checklist
-
-            </button>
-
-            <button
-                class="btn soft small"
-                onclick="editTrip('${trip.id}')">
-
-                ✏️
-
-            </button>
-
-            <button
-                class="btn danger small"
-                onclick="deleteTrip('${trip.id}')">
-
-                🗑️
-
-            </button>
-
-        </div>
+      </div>
 
     </div>
 
-    `;
+    <div
+      style="
+        margin-top:12px;
+        background:#edf2ef;
+        height:7px;
+        border-radius:999px;
+        overflow:hidden;
+      ">
 
+      <div
+        style="
+          width:${pct}%;
+          height:100%;
+          background:#245a43;
+        ">
+      </div>
+
+    </div>
+
+    <div
+      class="item-meta"
+      style="margin-top:6px">
+
+      🎒 ${packed}/${total} preparados
+      • ${pct}%
+      • 🛒 ${buy} para comprar
+
+    </div>
+
+    <div class="trip-buttons">
+
+      <button
+        class="btn primary small"
+        onclick="openTrip('${trip.id}')">
+        ✅ Abrir checklist
+      </button>
+
+      <button
+        class="btn soft small"
+        onclick="editTrip('${trip.id}')">
+        ✏️ Editar
+      </button>
+
+      <button
+        class="btn danger small"
+        onclick="deleteTrip('${trip.id}')">
+        🗑️ Excluir
+      </button>
+
+    </div>
+
+  </div>
+  `;
 }
 
-
-/* ================================
-   RENDER VIAGENS
-================================ */
+function getSortedTrips(){
+  return [...db.trips].sort((a,b)=>{
+    if(!a.date && !b.date) return (b.createdAt||0)-(a.createdAt||0);
+    if(!a.date) return 1;
+    if(!b.date) return -1;
+    return a.date.localeCompare(b.date);
+  });
+}
 
 function renderTrips(){
+  const sorted=getSortedTrips();
 
-    const sorted=[...db.trips].sort(
-        (a,b)=>{
+  if(!sorted.length){
+    tripList.innerHTML=`
+      <div class="empty">
 
-            if(!a.date && !b.date)
-                return 0;
+        <div class="empty-icon">🏕️</div>
 
-            if(!a.date)
-                return 1;
+        Nenhum acampamento agendado.
 
-            if(!b.date)
-                return -1;
+        <br><br>
 
-            return a.date.localeCompare(
-                b.date
-            );
+        <button
+          class="btn primary"
+          onclick="openNewTrip()">
+          Agendar primeiro acampamento
+        </button>
 
-        }
-    );
-
-
+      </div>
+    `;
+  }else{
     tripList.innerHTML=
-        sorted.map(
-            trip=>tripCardHTML(trip)
-        ).join("");
+      sorted.map(trip=>tripCardHTML(trip)).join("");
+  }
 
+  const upcoming=sorted.filter(trip=>{
+    if(!trip.date) return true;
+    const days=daysUntil(trip.date);
+    return days===null || days>=0;
+  });
 
-    homeTrips.innerHTML=
-        sorted
-        .slice(0,3)
-        .map(
-            trip=>tripCardHTML(trip)
-        ).join("");
-
+  homeTrips.innerHTML=
+    upcoming.length
+    ? upcoming.slice(0,3).map(trip=>tripCardHTML(trip)).join("")
+    : `
+      <div class="empty">
+        Nenhuma próxima viagem.
+      </div>
+    `;
 }
-
-
-/* ================================
-   HOME
-================================ */
 
 function renderHome(){
+  const trip=currentTrip();
+  if(!trip) return;
 
-    const trip=currentTrip();
+  const sortedTrips=getSortedTrips();
 
-    if(!trip)
-        return;
+  homeTripSelect.innerHTML=
+    sortedTrips.map(t=>`
+      <option value="${t.id}">
+        ${t.date ? formatDate(t.date)+" - " : ""}
+        ${esc(t.name)}
+      </option>
+    `).join("");
 
+  homeTripSelect.value=db.active;
 
-    homeTripName.textContent=
-        trip.name;
+  homeTripName.textContent=trip.name;
 
+  let dateText="📅 "+formatDate(trip.date);
 
-    let dateText=
-        "📅 "+formatDate(trip.date);
+  if(trip.location){
+    dateText+=" • 📍 "+trip.location;
+  }
 
-    if(trip.location){
+  homeTripDate.textContent=dateText;
 
-        dateText+=
-            " • 📍 "+trip.location;
+  const days=daysUntil(trip.date);
 
-    }
+  if(days===null){
+    daysNumber.textContent="--";
+    daysText.textContent="defina uma data";
+  }else if(days===0){
+    daysNumber.textContent="Hoje!";
+    daysText.textContent="é dia de acampar 🏕️";
+  }else if(days>0){
+    daysNumber.textContent=days;
+    daysText.textContent=
+      days===1
+      ? "dia restante"
+      : "dias restantes";
+  }else{
+    daysNumber.textContent=Math.abs(days);
+    daysText.textContent="dias desde a viagem";
+  }
 
-    homeTripDate.textContent=
-        dateText;
+  const total=trip.items.length;
+  const have=trip.items.filter(x=>x.status==="have").length;
+  const buy=trip.items.filter(x=>x.status==="buy").length;
+  const packed=trip.items.filter(x=>x.status==="packed").length;
 
+  const pct=
+    total
+    ? Math.round(packed/total*100)
+    : 0;
 
-    const days=
-        daysUntil(trip.date);
+  progressText.textContent=pct+"%";
+  progressBar.style.width=pct+"%";
 
+  statTotal.textContent=total;
+  statHave.textContent=have;
+  statBuy.textContent=buy;
+  statPacked.textContent=packed;
 
-    if(days===null){
+  summaryBadge.textContent=total+" itens";
 
-        daysNumber.textContent="--";
-        daysText.textContent="defina uma data";
+  const pending=trip.items.filter(x=>x.status!=="packed");
 
-    }
+  pendingBadge.textContent=pending.length+" faltando";
 
-    else if(days===0){
-
-        daysNumber.textContent="Hoje!";
-        daysText.textContent=
-            "é dia de acampar 🏕️";
-
-    }
-
-    else if(days>0){
-
-        daysNumber.textContent=days;
-
-        daysText.textContent=
-            days===1
-            ?"dia restante"
-            :"dias restantes";
-
-    }
-
-    else{
-
-        daysNumber.textContent=
-            Math.abs(days);
-
-        daysText.textContent=
-            "dias desde a viagem";
-
-    }
-
-
-    const total=trip.items.length;
-
-    const have=
-        trip.items.filter(
-            x=>x.status==="have"
-        ).length;
-
-    const buy=
-        trip.items.filter(
-            x=>x.status==="buy"
-        ).length;
-
-    const packed=
-        trip.items.filter(
-            x=>x.status==="packed"
-        ).length;
-
-
-    const pct=
-        total
-        ?Math.round(packed/total*100)
-        :0;
-
-
-    progressText.textContent=
-        pct+"%";
-
-    progressBar.style.width=
-        pct+"%";
-
-
-    statTotal.textContent=total;
-    statHave.textContent=have;
-    statBuy.textContent=buy;
-    statPacked.textContent=packed;
-
-    summaryBadge.textContent=
-        total+" itens";
-
-
-    const pending=
-        trip.items.filter(
-            x=>x.status!=="packed"
-        );
-
-
-    pendingBadge.textContent=
-        pending.length+" faltando";
-
-
-    homePending.innerHTML=
-        pending.length
-        ?pending
-            .slice(0,5)
-            .map(
-                item=>itemHTML(item,false)
-            )
-            .join("")
-        :`
-
-        <div class="empty">
-
-            <div class="empty-icon">🎉</div>
-
-            Tudo pronto!
-
-            <br>
-
-            Agora é só aproveitar o acampamento.
-
-        </div>
-
-        `;
-
+  homePending.innerHTML=
+    pending.length
+    ? pending.slice(0,5).map(item=>itemHTML(item,false)).join("")
+    : `
+      <div class="empty">
+        <div class="empty-icon">🎉</div>
+        Tudo pronto!
+        <br>
+        Agora é só aproveitar o acampamento.
+      </div>
+    `;
 }
-
-
-/* ================================
-   RENDER PRINCIPAL
-================================ */
 
 function render(){
-
-    renderHome();
-    renderChecklist();
-    renderShopping();
-    renderTrips();
-
+  renderHome();
+  renderChecklist();
+  renderShopping();
+  renderTrips();
 }
 
-
-/* ================================
-   NOVO ITEM
-================================ */
-
 addItemBtn.onclick=()=>{
+  editingItemId=null;
 
-    editingItemId=null;
+  itemModalTitle.textContent="Adicionar item";
 
-    itemModalTitle.textContent=
-        "Adicionar item";
+  itemName.value="";
+  itemQty.value=1;
+  itemNote.value="";
 
-    itemName.value="";
-    itemQty.value=1;
-    itemNote.value="";
+  itemCategory.innerHTML=
+    categories
+    .filter(x=>x!=="Todos")
+    .map(category=>`<option>${category}</option>`)
+    .join("");
 
-    itemCategory.innerHTML=
-        categories
-        .filter(x=>x!=="Todos")
-        .map(
-            category=>
-            `<option>${category}</option>`
-        )
-        .join("");
-
-    itemDialog.showModal();
-
+  itemDialog.showModal();
 };
-
 
 saveItemBtn.onclick=()=>{
+  const name=itemName.value.trim();
 
-    const name=
-        itemName.value.trim();
+  if(!name){
+    alert("Informe o nome do item.");
+    return;
+  }
 
-    if(!name){
+  if(editingItemId){
+    const item=currentTrip().items.find(x=>x.id===editingItemId);
 
-        alert(
-            "Informe o nome do item."
-        );
-
-        return;
-
+    if(item){
+      item.name=name;
+      item.category=itemCategory.value;
+      item.qty=Math.max(1,Number(itemQty.value)||1);
+      item.note=itemNote.value.trim();
     }
+  }else{
+    currentTrip().items.push({
+      id:uid(),
+      name,
+      category:itemCategory.value,
+      qty:Math.max(1,Number(itemQty.value)||1),
+      note:itemNote.value.trim(),
+      status:"none"
+    });
+  }
 
-
-    if(editingItemId){
-
-        const item=
-            currentTrip().items.find(
-                x=>x.id===editingItemId
-            );
-
-        if(item){
-
-            item.name=name;
-            item.category=
-                itemCategory.value;
-
-            item.qty=
-                Math.max(
-                    1,
-                    Number(itemQty.value)||1
-                );
-
-            item.note=
-                itemNote.value.trim();
-
-        }
-
-    }
-
-    else{
-
-        currentTrip().items.push({
-
-            id:uid(),
-
-            name,
-
-            category:
-                itemCategory.value,
-
-            qty:
-                Math.max(
-                    1,
-                    Number(itemQty.value)||1
-                ),
-
-            note:
-                itemNote.value.trim(),
-
-            status:"none"
-
-        });
-
-    }
-
-
-    save();
-
-    itemDialog.close();
-
-    render();
-
+  save();
+  itemDialog.close();
+  render();
 };
-
-
-/* ================================
-   NOVA VIAGEM
-================================ */
 
 let editingTripId=null;
 
-
 window.openNewTrip=function(){
+  editingTripId=null;
 
-    editingTripId=null;
+  tripModalTitle.textContent="Novo acampamento";
 
-    tripModalTitle.textContent=
-        "Novo acampamento";
+  tripName.value="";
+  tripDate.value="";
+  tripLocation.value="";
+  tripPeople.value=1;
 
-    tripName.value="";
-    tripDate.value="";
-    tripLocation.value="";
-    tripPeople.value=1;
+  copyCurrent.checked=true;
+  copyCurrent.disabled=false;
 
-    copyCurrent.checked=true;
-    copyCurrent.disabled=false;
-
-    tripDialog.showModal();
-
+  tripDialog.showModal();
 };
-
-
-/* ================================
-   EDITAR VIAGEM
-================================ */
 
 window.editTrip=function(id){
+  const trip=db.trips.find(x=>x.id===id);
+  if(!trip) return;
 
-    const trip=
-        db.trips.find(
-            x=>x.id===id
-        );
+  editingTripId=id;
 
-    if(!trip)
-        return;
+  tripModalTitle.textContent="Editar acampamento";
 
-    editingTripId=id;
+  tripName.value=trip.name;
+  tripDate.value=trip.date || "";
+  tripLocation.value=trip.location || "";
+  tripPeople.value=trip.people || 1;
 
-    tripModalTitle.textContent=
-        "Editar acampamento";
+  copyCurrent.checked=false;
+  copyCurrent.disabled=true;
 
-    tripName.value=
-        trip.name;
-
-    tripDate.value=
-        trip.date || "";
-
-    tripLocation.value=
-        trip.location || "";
-
-    tripPeople.value=
-        trip.people || 1;
-
-    copyCurrent.checked=false;
-    copyCurrent.disabled=true;
-
-    tripDialog.showModal();
-
+  tripDialog.showModal();
 };
-
-
-/* ================================
-   SALVAR VIAGEM
-================================ */
 
 saveTripBtn.onclick=()=>{
+  const name=tripName.value.trim();
 
-    const name=
-        tripName.value.trim();
+  if(!name){
+    alert("Informe o nome da viagem.");
+    return;
+  }
 
-    if(!name){
+  if(editingTripId){
+    const trip=db.trips.find(x=>x.id===editingTripId);
+    if(!trip) return;
 
-        alert(
-            "Informe o nome da viagem."
-        );
+    trip.name=name;
+    trip.date=tripDate.value;
+    trip.location=tripLocation.value.trim();
+    trip.people=Math.max(1,Number(tripPeople.value)||1);
+  }else{
+    const id=uid();
 
-        return;
+    let newItems;
 
+    if(copyCurrent.checked && currentTrip()){
+      newItems=currentTrip().items.map(item=>({
+        ...item,
+        id:uid(),
+        status:"none"
+      }));
+    }else{
+      newItems=createStarterItems();
     }
 
-
-    if(editingTripId){
-
-        const trip=
-            db.trips.find(
-                x=>x.id===editingTripId
-            );
-
-        if(!trip)
-            return;
-
-
-        trip.name=name;
-        trip.date=
-            tripDate.value;
-
-        trip.location=
-            tripLocation.value.trim();
-
-        trip.people=
-            Math.max(
-                1,
-                Number(tripPeople.value)||1
-            );
-
-    }
-
-    else{
-
-        const id=uid();
-
-        let newItems;
-
-
-        if(copyCurrent.checked &&
-           currentTrip()){
-
-            newItems=
-                currentTrip().items.map(
-                    item=>({
-
-                        ...item,
-
-                        id:uid(),
-
-                        status:"none"
-
-                    })
-                );
-
-        }
-
-        else{
-
-            newItems=
-                createStarterItems();
-
-        }
-
-
-        db.trips.push({
-
-            id,
-
-            name,
-
-            date:
-                tripDate.value,
-
-            location:
-                tripLocation.value.trim(),
-
-            people:
-                Math.max(
-                    1,
-                    Number(tripPeople.value)||1
-                ),
-
-            createdAt:
-                Date.now(),
-
-            items:newItems
-
-        });
-
-
-        /* NOVA VIAGEM JÁ VIRA ATUAL */
-
-        db.active=id;
-
-    }
-
-
-    save();
-
-    tripDialog.close();
-
-    render();
-
-};
-
-
-/* ================================
-   ABRIR VIAGEM
-================================ */
-
-window.openTrip=function(id){
-
-    const exists=
-        db.trips.some(
-            x=>x.id===id
-        );
-
-    if(!exists)
-        return;
-
-
-    db.active=id;
-
-    selectedCategory="Todos";
-    searchText="";
-    searchInput.value="";
-
-    save();
-
-    showScreen("Checklist");
-
-    render();
-
-};
-
-
-/* ================================
-   CHECKLIST ATUAL
-================================ */
-
-window.openCurrentChecklist=function(){
-
-    showScreen("Checklist");
-
-};
-
-
-/* ================================
-   EXCLUIR VIAGEM
-================================ */
-
-window.deleteTrip=function(id){
-
-    const trip=
-        db.trips.find(
-            x=>x.id===id
-        );
-
-    if(!trip)
-        return;
-
-
-    if(db.trips.length===1){
-
-        alert(
-            "Você precisa ter pelo menos uma viagem."
-        );
-
-        return;
-
-    }
-
-
-    if(!confirm(
-        `Excluir a viagem "${trip.name}" e todo o checklist dela?`
-    ))
-        return;
-
-
-    db.trips=
-        db.trips.filter(
-            x=>x.id!==id
-        );
-
-
-    if(db.active===id){
-
-        db.active=
-            db.trips[0].id;
-
-    }
-
-
-    save();
-
-    render();
-
-};
-
-
-/* ================================
-   NAVEGAÇÃO
-================================ */
-
-function showScreen(name){
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(
-            screen=>
-                screen.classList.remove(
-                    "active"
-                )
-        );
-
-
-    const target=
-        document.getElementById(
-            "screen"+name
-        );
-
-    if(target){
-
-        target.classList.add(
-            "active"
-        );
-
-    }
-
-
-    document
-        .querySelectorAll("nav button")
-        .forEach(button=>{
-
-            button.classList.toggle(
-                "active",
-                button.dataset.screen===name
-            );
-
-        });
-
-
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
+    db.trips.push({
+      id,
+      name,
+      date:tripDate.value,
+      location:tripLocation.value.trim(),
+      people:Math.max(1,Number(tripPeople.value)||1),
+      createdAt:Date.now(),
+      items:newItems
     });
 
-}
+    db.active=id;
+  }
 
+  save();
+  tripDialog.close();
+  render();
+};
+
+window.openTrip=function(id){
+  const exists=db.trips.some(x=>x.id===id);
+  if(!exists) return;
+
+  db.active=id;
+
+  selectedCategory="Todos";
+  searchText="";
+  searchInput.value="";
+
+  save();
+
+  showScreen("Checklist");
+  render();
+};
+
+window.openCurrentChecklist=function(){
+  showScreen("Checklist");
+};
+
+window.deleteTrip=function(id){
+  const trip=db.trips.find(x=>x.id===id);
+  if(!trip) return;
+
+  if(db.trips.length===1){
+    alert("Você precisa ter pelo menos uma viagem.");
+    return;
+  }
+
+  if(!confirm(`Excluir a viagem "${trip.name}" e todo o checklist dela?`)){
+    return;
+  }
+
+  db.trips=db.trips.filter(x=>x.id!==id);
+
+  if(db.active===id){
+    db.active=db.trips[0].id;
+  }
+
+  save();
+  render();
+};
+
+homeTripSelect.onchange=()=>{
+  const id=homeTripSelect.value;
+
+  const exists=db.trips.some(trip=>trip.id===id);
+  if(!exists) return;
+
+  db.active=id;
+
+  selectedCategory="Todos";
+  searchText="";
+  searchInput.value="";
+
+  save();
+  render();
+};
+
+function showScreen(name){
+  document
+    .querySelectorAll(".screen")
+    .forEach(screen=>screen.classList.remove("active"));
+
+  const target=document.getElementById("screen"+name);
+
+  if(target){
+    target.classList.add("active");
+  }
+
+  document
+    .querySelectorAll("nav button")
+    .forEach(button=>{
+      button.classList.toggle(
+        "active",
+        button.dataset.screen===name
+      );
+    });
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
 
 document
 .querySelectorAll("nav button")
 .forEach(button=>{
-
-    button.addEventListener(
-        "click",
-        ()=>{
-
-            showScreen(
-                button.dataset.screen
-            );
-
-        }
-    );
-
+  button.addEventListener("click",()=>{
+    showScreen(button.dataset.screen);
+  });
 });
 
-
-/* ================================
-   CATEGORIAS MODAL
-================================ */
-
 itemCategory.innerHTML=
-    categories
-    .filter(x=>x!=="Todos")
-    .map(
-        category=>
-        `<option>${category}</option>`
-    )
-    .join("");
-
-
-/* ================================
-   SERVICE WORKER
-================================ */
+  categories
+  .filter(x=>x!=="Todos")
+  .map(category=>`<option>${category}</option>`)
+  .join("");
 
 if("serviceWorker" in navigator){
-
-    window.addEventListener(
-        "load",
-        ()=>{
-
-            navigator
-            .serviceWorker
-            .register(
-                "./service-worker.js"
-            )
-            .catch(
-                error=>
-                    console.error(
-                        "Service Worker:",
-                        error
-                    )
-            );
-
-        }
-    );
-
+  window.addEventListener("load",()=>{
+    navigator
+      .serviceWorker
+      .register("./service-worker.js")
+      .catch(error=>console.error("Service Worker:",error));
+  });
 }
 
-
-/* ================================
-   PRIMEIRO SAVE
-================================ */
-
 save();
-
 render();
 
 </script>
