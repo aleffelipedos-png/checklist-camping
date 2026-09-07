@@ -355,13 +355,6 @@ dialog::backdrop{background:rgba(0,0,0,.55)}
       <span class="badge" id="checklistProgress">0%</span>
     </div>
 
-    <button
-      class="btn primary"
-      style="width:100%;margin-bottom:12px"
-      onclick="openNewItem()">
-      + Cadastrar novo item
-    </button>
-
     <div class="search">
       <span>🔎</span>
       <input id="searchInput" placeholder="Pesquisar item...">
@@ -482,13 +475,6 @@ dialog::backdrop{background:rgba(0,0,0,.55)}
 <input id="itemNote" placeholder="Opcional">
 </div>
 
-</div>
-
-<div class="copy-option" id="defaultItemOption">
-  <label>
-    <input type="checkbox" id="addToDefault">
-    Adicionar também ao checklist padrão das próximas viagens
-  </label>
 </div>
 
 <div class="modal-actions">
@@ -667,40 +653,8 @@ function uid(){
   return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
 
-const DEFAULT_ITEMS_KEY="campingPWA_custom_default_items";
-
-function getCustomDefaultItems(){
-  try{
-    const saved=JSON.parse(localStorage.getItem(DEFAULT_ITEMS_KEY));
-    return Array.isArray(saved) ? saved : [];
-  }catch(e){
-    return [];
-  }
-}
-
-function saveCustomDefaultItem(item){
-  const custom=getCustomDefaultItems();
-
-  const exists=custom.some(x=>
-    String(x.name || "").trim().toLowerCase()===String(item.name || "").trim().toLowerCase()
-    &&
-    String(x.category || "")===String(item.category || "")
-  );
-
-  if(!exists){
-    custom.push({
-      name:item.name,
-      category:item.category,
-      qty:item.qty || 1,
-      note:item.note || ""
-    });
-
-    localStorage.setItem(DEFAULT_ITEMS_KEY,JSON.stringify(custom));
-  }
-}
-
 function createStarterItems(){
-  const originals=starterItems.map(([name,category])=>({
+  return starterItems.map(([name,category])=>({
     id:uid(),
     name,
     category,
@@ -708,17 +662,6 @@ function createStarterItems(){
     note:"",
     status:"none"
   }));
-
-  const custom=getCustomDefaultItems().map(item=>({
-    id:uid(),
-    name:item.name,
-    category:item.category || "Equipamentos",
-    qty:Math.max(1,Number(item.qty)||1),
-    note:item.note || "",
-    status:"none"
-  }));
-
-  return [...originals,...custom];
 }
 
 const STORAGE_KEY="campingPWA_v5";
@@ -875,8 +818,6 @@ window.editItem=function(id){
   itemCategory.value=item.category;
   itemQty.value=item.qty;
   itemNote.value=item.note || "";
-  addToDefault.checked=false;
-  defaultItemOption.style.display="none";
 
   itemDialog.showModal();
 };
@@ -1024,10 +965,12 @@ function renderChecklist(){
     `;
 
   const packed=trip.items.filter(x=>x.status==="packed").length;
+  const have=trip.items.filter(x=>x.status==="have").length;
+  const prepared=packed+have;
 
   const pct=
     trip.items.length
-    ? Math.round(packed/trip.items.length*100)
+    ? Math.round(prepared/trip.items.length*100)
     : 0;
 
   checklistProgress.textContent=pct+"%";
@@ -1052,11 +995,13 @@ function renderShopping(){
 function tripCardHTML(trip){
   const total=trip.items.length;
   const packed=trip.items.filter(item=>item.status==="packed").length;
+  const have=trip.items.filter(item=>item.status==="have").length;
   const buy=trip.items.filter(item=>item.status==="buy").length;
+  const prepared=packed+have;
 
   const pct=
     total
-    ? Math.round(packed/total*100)
+    ? Math.round(prepared/total*100)
     : 0;
 
   const days=daysUntil(trip.date);
@@ -1146,7 +1091,7 @@ function tripCardHTML(trip){
       class="item-meta"
       style="margin-top:6px">
 
-      🎒 ${packed}/${total} preparados
+      ✅ ${prepared}/${total} resolvidos • 🎒 ${packed} na mochila
       • ${pct}%
       • 🛒 ${buy} para comprar
 
@@ -1279,9 +1224,11 @@ function renderHome(){
   const buy=trip.items.filter(x=>x.status==="buy").length;
   const packed=trip.items.filter(x=>x.status==="packed").length;
 
+  const prepared=have+packed;
+
   const pct=
     total
-    ? Math.round(packed/total*100)
+    ? Math.round(prepared/total*100)
     : 0;
 
   progressText.textContent=pct+"%";
@@ -1294,7 +1241,7 @@ function renderHome(){
 
   summaryBadge.textContent=total+" itens";
 
-  const pending=trip.items.filter(x=>x.status!=="packed");
+  const pending=trip.items.filter(x=>x.status!=="packed" && x.status!=="have");
 
   pendingBadge.textContent=pending.length+" faltando";
 
@@ -1318,16 +1265,14 @@ function render(){
   renderTrips();
 }
 
-window.openNewItem=function(){
+addItemBtn.onclick=()=>{
   editingItemId=null;
 
-  itemModalTitle.textContent="Cadastrar novo item";
+  itemModalTitle.textContent="Adicionar item";
 
   itemName.value="";
   itemQty.value=1;
   itemNote.value="";
-  addToDefault.checked=false;
-  defaultItemOption.style.display="block";
 
   itemCategory.innerHTML=
     categories
@@ -1336,10 +1281,6 @@ window.openNewItem=function(){
     .join("");
 
   itemDialog.showModal();
-};
-
-addItemBtn.onclick=()=>{
-  openNewItem();
 };
 
 saveItemBtn.onclick=()=>{
@@ -1360,20 +1301,14 @@ saveItemBtn.onclick=()=>{
       item.note=itemNote.value.trim();
     }
   }else{
-    const newItem={
+    currentTrip().items.push({
       id:uid(),
       name,
       category:itemCategory.value,
       qty:Math.max(1,Number(itemQty.value)||1),
       note:itemNote.value.trim(),
       status:"none"
-    };
-
-    currentTrip().items.push(newItem);
-
-    if(addToDefault.checked){
-      saveCustomDefaultItem(newItem);
-    }
+    });
   }
 
   save();
