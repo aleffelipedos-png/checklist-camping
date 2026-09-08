@@ -405,6 +405,24 @@ dialog::backdrop{background:rgba(0,0,0,.55)}
 
 </section>
 
+<section id="screenBackpack" class="screen">
+
+  <div class="card">
+    <div class="section-title">
+      <div>
+        <h2>🎒 Minha mochila</h2>
+        <div class="item-meta">
+          Tudo que você marcar como "Na mochila" no checklist aparece aqui.
+        </div>
+      </div>
+      <span class="badge" id="backpackBadge"></span>
+    </div>
+
+    <div id="backpackList"></div>
+  </div>
+
+</section>
+
 <section id="screenTrips" class="screen">
 
   <div class="card">
@@ -456,6 +474,11 @@ dialog::backdrop{background:rgba(0,0,0,.55)}
 <button data-screen="Shopping">
   <span class="nav-icon">🛒</span>
   Comprar
+</button>
+
+<button data-screen="Backpack">
+  <span class="nav-icon">🎒</span>
+  Mochila
 </button>
 
 <button data-screen="Trips">
@@ -595,7 +618,7 @@ Copiar checklist da viagem atual
 <script>
 
 const $ = id => document.getElementById(id);
-const filters=$("filters"), searchInput=$("searchInput"), checklistTripName=$("checklistTripName"), checklistTripDate=$("checklistTripDate"), checklistProgress=$("checklistProgress"), listTitle=$("listTitle"), listBadge=$("listBadge"), items=$("items"), shoppingBadge=$("shoppingBadge"), shoppingList=$("shoppingList"), tripList=$("tripList"), homeTrips=$("homeTrips"), homeTripSelect=$("homeTripSelect"), homeTripName=$("homeTripName"), homeTripDate=$("homeTripDate"), daysNumber=$("daysNumber"), daysText=$("daysText"), progressText=$("progressText"), progressBar=$("progressBar"), statTotal=$("statTotal"), statHave=$("statHave"), statBuy=$("statBuy"), statPacked=$("statPacked"), summaryBadge=$("summaryBadge"), pendingBadge=$("pendingBadge"), homePending=$("homePending"), addItemBtn=$("addItemBtn"), itemDialog=$("itemDialog"), itemModalTitle=$("itemModalTitle"), itemName=$("itemName"), itemCategory=$("itemCategory"), itemQty=$("itemQty"), itemNote=$("itemNote"), saveItemBtn=$("saveItemBtn"), tripDialog=$("tripDialog"), tripModalTitle=$("tripModalTitle"), tripName=$("tripName"), tripDate=$("tripDate"), tripLocation=$("tripLocation"), tripPeople=$("tripPeople"), copyCurrent=$("copyCurrent"), saveTripBtn=$("saveTripBtn"), loginDialog=$("loginDialog"), loginEmail=$("loginEmail"), loginPassword=$("loginPassword"), loginBtn=$("loginBtn"), syncBtn=$("syncBtn"), syncBtnText=$("syncBtnText"), syncActionBtn=$("syncActionBtn"), syncTitle=$("syncTitle"), syncStatusText=$("syncStatusText");
+const filters=$("filters"), searchInput=$("searchInput"), checklistTripName=$("checklistTripName"), checklistTripDate=$("checklistTripDate"), checklistProgress=$("checklistProgress"), listTitle=$("listTitle"), listBadge=$("listBadge"), items=$("items"), shoppingBadge=$("shoppingBadge"), shoppingList=$("shoppingList"), backpackBadge=$("backpackBadge"), backpackList=$("backpackList"), tripList=$("tripList"), homeTrips=$("homeTrips"), homeTripSelect=$("homeTripSelect"), homeTripName=$("homeTripName"), homeTripDate=$("homeTripDate"), daysNumber=$("daysNumber"), daysText=$("daysText"), progressText=$("progressText"), progressBar=$("progressBar"), statTotal=$("statTotal"), statHave=$("statHave"), statBuy=$("statBuy"), statPacked=$("statPacked"), summaryBadge=$("summaryBadge"), pendingBadge=$("pendingBadge"), homePending=$("homePending"), addItemBtn=$("addItemBtn"), itemDialog=$("itemDialog"), itemModalTitle=$("itemModalTitle"), itemName=$("itemName"), itemCategory=$("itemCategory"), itemQty=$("itemQty"), itemNote=$("itemNote"), saveItemBtn=$("saveItemBtn"), tripDialog=$("tripDialog"), tripModalTitle=$("tripModalTitle"), tripName=$("tripName"), tripDate=$("tripDate"), tripLocation=$("tripLocation"), tripPeople=$("tripPeople"), copyCurrent=$("copyCurrent"), saveTripBtn=$("saveTripBtn"), loginDialog=$("loginDialog"), loginEmail=$("loginEmail"), loginPassword=$("loginPassword"), loginBtn=$("loginBtn"), syncBtn=$("syncBtn"), syncBtnText=$("syncBtnText"), syncActionBtn=$("syncActionBtn"), syncTitle=$("syncTitle"), syncStatusText=$("syncStatusText");
 
 const firebaseConfig={
   apiKey:"AIzaSyBMvUrNeobS2dMfRm4FZuo8lq989RlfMn0",
@@ -1140,6 +1163,26 @@ function renderShopping(){
     `;
 }
 
+function renderBackpack(){
+  const trip=currentTrip();
+  if(!trip) return;
+
+  const packed=(trip.items || []).filter(x=>x.status==="packed");
+
+  backpackBadge.textContent=`${packed.length} ${packed.length===1?"item":"itens"}`;
+
+  backpackList.innerHTML=
+    packed.length
+    ? packed.map(item=>itemHTML(item,false)).join("")
+    : `
+      <div class="empty">
+        <div class="empty-icon">🎒</div>
+        Sua mochila ainda está vazia.<br>
+        Marque itens como <b>Na mochila</b> no checklist.
+      </div>
+    `;
+}
+
 function tripCardHTML(trip){
   const total=trip.items.length;
   const packed=trip.items.filter(item=>item.status==="packed").length;
@@ -1410,6 +1453,7 @@ function render(){
   renderHome();
   renderChecklist();
   renderShopping();
+  renderBackpack();
   renderTrips();
 }
 
