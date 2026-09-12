@@ -119,24 +119,60 @@ nav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.97);bord
 const $=id=>document.getElementById(id), money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), uid=()=>crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
 const firebaseConfig={apiKey:"AIzaSyBMvUrNeobS2dMfRm4FZuo8lq989RlfMn0",authDomain:"meu-camping.firebaseapp.com",projectId:"meu-camping",storageBucket:"meu-camping.firebasestorage.app",messagingSenderId:"540013845763",appId:"1:540013845763:web:1bbbb6ea80c3a9ba651d36",measurementId:"G-QZ2R0SRQBH"};
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),firestore=firebase.firestore();let cloudUser=null,cloudUnsub=null,saveTimer=null,applyingRemote=false;
-const APP_VERSION='6.5';
-const STORAGE_KEY='campingPWA_v65';
+const APP_VERSION='6.6';
+// Chave estável: evita criar uma cópia inteira dos dados a cada versão do app.
+const STORAGE_KEY='campingPWA_main';
+const LEGACY_STORAGE_KEYS=['campingPWA_v65','campingPWA_v64','campingPWA_v63','campingPWA_v62','campingPWA_v61','campingPWA_v6','campingPWA_v5','campingPWA_v4','campingPWA_v3'];
 let pendingLocalSync=false,lastLocalWriteAt=0;
 const categories=['Acampamento','Cozinha','Alimentos','Roupas','Equipamentos','Higiene','Primeiros socorros','Lazer','Carro/viagem','Outros'];
 const starter=[['Barraca','Acampamento',1],['Lona','Acampamento',1],['Estacas','Acampamento',1],['Colchão','Acampamento',0],['Saco de dormir','Acampamento',0],['Travesseiro','Acampamento',0],['Fogareiro','Cozinha',1],['Gás','Cozinha',1],['Panela','Cozinha',0],['Pratos','Cozinha',0],['Copos','Cozinha',0],['Talheres','Cozinha',0],['Isqueiro','Cozinha',1],['Água','Alimentos',1],['Café','Alimentos',0],['Bebidas','Alimentos',0],['Casaco','Roupas',0],['Lanterna','Equipamentos',1],['Power bank','Equipamentos',0],['Carregadores','Equipamentos',1],['Corda','Equipamentos',0],['Papel higiênico','Higiene',1],['Repelente','Higiene',1],['Protetor solar','Higiene',0],['Kit primeiros socorros','Primeiros socorros',1],['Remédios pessoais','Primeiros socorros',1],['Cadeira','Lazer',0],['Documentos','Carro/viagem',1],['Combustível','Carro/viagem',1]];
 const typeSuggestions={barraca:[['Martelo','Acampamento'],['Bomba de ar','Acampamento'],['Extensão','Equipamentos']],chale:[['Roupa de cama','Acampamento'],['Toalhas','Higiene']],pescaria:[['Vara de pesca','Lazer'],['Iscas','Lazer'],['Caixa térmica','Alimentos'],['Boné','Roupas']],praia:[['Guarda-sol','Lazer'],['Roupa de banho','Roupas'],['Chinelo','Roupas'],['Protetor solar','Higiene']],frio:[['Cobertor','Acampamento'],['Touca','Roupas'],['Luvas','Roupas'],['Casaco','Roupas']],familia:[['Brinquedos','Lazer'],['Lanches para crianças','Alimentos'],['Lenço umedecido','Higiene'],['Protetor solar','Higiene']]};
 function newItem(name,category='Outros',essential=false){return{id:uid(),name,category,qty:1,note:'',status:'none',essential:!!essential,estimatedPrice:0,paidPrice:0,store:''}}
 function starterItems(){return starter.map(([n,c,e])=>newItem(n,c,!!e))}
-let db;try{db=JSON.parse(localStorage.getItem(STORAGE_KEY))||JSON.parse(localStorage.getItem('campingPWA_v64'))||JSON.parse(localStorage.getItem('campingPWA_v63'))||JSON.parse(localStorage.getItem('campingPWA_v6'))||JSON.parse(localStorage.getItem('campingPWA_v5'))}catch(e){}
+let db;
+try{
+  // Carrega primeiro a chave atual; se não existir, migra a cópia legada mais recente.
+  const keys=[STORAGE_KEY,...LEGACY_STORAGE_KEYS];
+  for(const key of keys){
+    const raw=localStorage.getItem(key);
+    if(!raw)continue;
+    try{const parsed=JSON.parse(raw);if(parsed&&Array.isArray(parsed.trips)){db=parsed;break}}catch(_e){}
+  }
+}catch(e){console.warn('Falha ao ler dados locais',e)}
 if(!db||!Array.isArray(db.trips)){const id=uid();db={active:id,updatedAt:Date.now(),trips:[{id,name:'Meu primeiro passeio',date:'',endDate:'',location:'',people:1,type:'barraca',createdAt:Date.now(),items:starterItems()}]}}
 function normalize(){db.trips.forEach(t=>{t.name=t.name||'Acampamento';t.date=t.date||'';t.endDate=t.endDate||t.date||'';t.location=t.location||'';t.people=Math.max(1,Number(t.people||1));t.type=t.type||'barraca';t.items=Array.isArray(t.items)?t.items:starterItems();t.expenses=Array.isArray(t.expenses)?t.expenses:[];t.meals=Array.isArray(t.meals)?t.meals:[];t.forgotten=Array.isArray(t.forgotten)?t.forgotten:[];t.departureChecks=t.departureChecks||{};t.duringNotes=t.duringNotes||'';t.vehicle=t.vehicle||{distanceKm:0,kml:10,fuelPrice:0,tolls:0};t.origin=t.origin||null;t.destinationCoords=t.destinationCoords||null;t.routeDurationMin=Number(t.routeDurationMin||0);t.routeDistanceKm=Number(t.routeDistanceKm||0);t.archived=!!t.archived;t.rating=Number(t.rating||0);t.postNotes=t.postNotes||'';t.items.forEach(i=>{i.id=i.id||uid();i.name=i.name||'Item';i.category=i.category||'Outros';i.qty=Math.max(1,Number(i.qty||1));i.note=i.note||'';i.status=i.status||'none';i.essential=!!i.essential;i.estimatedPrice=Number(i.estimatedPrice||0);i.paidPrice=Number(i.paidPrice||0);i.store=i.store||''})});if(!db.active||!db.trips.some(t=>t.id===db.active))db.active=db.trips[0]?.id||'';db.updatedAt=Number(db.updatedAt||Date.now())}normalize();
 function currentTrip(){return db.trips.find(t=>t.id===db.active)||db.trips[0]}
+function compactForStorage(source){
+  // routeGeometry pode ficar muito grande. A rota pode ser recalculada a partir da origem/destino,
+  // então não precisamos ocupar o localStorage com milhares de pontos do mapa.
+  const copy=JSON.parse(JSON.stringify(source));
+  (copy.trips||[]).forEach(t=>{if(t.routeGeometry)delete t.routeGeometry});
+  return copy;
+}
+function clearLegacyStorage(){
+  // Versões antigas usavam uma chave diferente a cada atualização e acabavam enchendo o localStorage.
+  for(const key of LEGACY_STORAGE_KEYS){
+    try{localStorage.removeItem(key)}catch(_e){}
+  }
+}
 function writeLocal({touch=true}={}){
   if(touch&&!applyingRemote)db.updatedAt=Date.now();
-  const json=JSON.stringify(db);
-  localStorage.setItem(STORAGE_KEY,json);
+  const json=JSON.stringify(compactForStorage(db));
+  try{
+    localStorage.setItem(STORAGE_KEY,json);
+  }catch(e){
+    // Se o limite estiver cheio pelas cópias das versões anteriores, libera espaço e tenta novamente.
+    if(e && (e.name==='QuotaExceededError'||e.name==='NS_ERROR_DOM_QUOTA_REACHED'||e.code===22||e.code===1014)){
+      clearLegacyStorage();
+      localStorage.setItem(STORAGE_KEY,json);
+    }else{
+      throw e;
+    }
+  }
   const verify=localStorage.getItem(STORAGE_KEY);
   if(!verify)throw new Error('O navegador não confirmou o salvamento local.');
+  // Depois de confirmar a nova cópia, remove duplicatas antigas com segurança.
+  clearLegacyStorage();
   lastLocalWriteAt=Date.now();
   if(touch&&!applyingRemote)pendingLocalSync=true;
   return true;
@@ -333,8 +369,9 @@ $('addTripBtn').onclick=()=>openTripDialog();$('scheduleAddTripBtn').onclick=()=
     if(cloudUser)pushCloudNow();
   }catch(e){
     console.error('Erro ao salvar passeio',e);
-    feedback.textContent='❌ Não foi possível salvar. Tente novamente.';
-    alert('Não foi possível salvar o passeio.');
+    const msg=(e&&e.message)?e.message:String(e||'Erro desconhecido');
+    feedback.textContent='❌ Não foi possível salvar: '+msg;
+    alert('Não foi possível salvar o passeio. Motivo: '+msg);
   }finally{
     btn.disabled=false;
     btn.textContent='Salvar passeio';
@@ -344,6 +381,6 @@ function renderHistory(){const a=db.trips.filter(t=>t.archived);$('historyList')
 const photoDBName='MeuCampingPhotos';function openPhotoDB(){return new Promise((res,rej)=>{const r=indexedDB.open(photoDBName,1);r.onupgradeneeded=()=>{r.result.createObjectStore('photos',{keyPath:'id'})};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}async function addPhoto(file){const data=await resizeImage(file);const dbx=await openPhotoDB();await new Promise((res,rej)=>{const tx=dbx.transaction('photos','readwrite');tx.objectStore('photos').put({id:uid(),tripId:currentTrip().id,data,createdAt:Date.now()});tx.oncomplete=res;tx.onerror=()=>rej(tx.error)})}function resizeImage(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onload=()=>{const img=new Image();img.onload=()=>{const max=1200,scale=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*scale);c.height=Math.round(img.height*scale);c.getContext('2d').drawImage(img,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',.78))};img.onerror=rej;img.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}async function getPhotos(){const dbx=await openPhotoDB();return new Promise((res,rej)=>{const tx=dbx.transaction('photos','readonly'),r=tx.objectStore('photos').getAll();r.onsuccess=()=>res(r.result.filter(x=>x.tripId===currentTrip().id).sort((a,b)=>b.createdAt-a.createdAt));r.onerror=()=>rej(r.error)})}window.deletePhoto=async id=>{const dbx=await openPhotoDB();const tx=dbx.transaction('photos','readwrite');tx.objectStore('photos').delete(id);tx.oncomplete=renderPhotos};async function renderPhotos(){try{const a=await getPhotos();$('photoGrid').innerHTML=a.length?a.map(p=>`<div class="photo"><img src="${p.data}"><button onclick="deletePhoto('${p.id}')">×</button></div>`).join(''):'<div class="empty" style="grid-column:1/-1"><span class="big">📸</span>Nenhuma foto.</div>'}catch(e){$('photoGrid').innerHTML='<div class="alert bad">Não foi possível abrir as fotos neste aparelho.</div>'}}$('photoInput').onchange=async e=>{for(const f of [...e.target.files])await addPhoto(f);e.target.value='';renderPhotos()};
 function render(){normalize();renderHome();renderChecklist();renderPurchases();renderMeals();renderBudget();renderRoute();renderBackpack();renderReady();renderDeparture();renderDuring();renderTrips();renderHistory();renderForgotten();renderPhotos()}
 function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$('screen'+name).classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));window.scrollTo({top:0,behavior:'smooth'});if(name==='Home'&&!weatherCache)loadWeather()}window.showScreen=showScreen;document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showScreen(b.dataset.go));document.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenPlan .subpanel').forEach(x=>x.classList.remove('active'));$('sub'+b.dataset.sub).classList.add('active');if(b.dataset.sub==='Route'){setTimeout(()=>{renderRoute();const m=ensureRouteMap();if(m)m.invalidateSize()},80)}});document.querySelectorAll('[data-trip-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-trip-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenTrip>.subpanel').forEach(x=>x.classList.remove('active'));$('trip'+b.dataset.tripSub).classList.add('active')});document.querySelectorAll('[data-more-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-more-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenMore>.subpanel').forEach(x=>x.classList.remove('active'));$('more'+b.dataset.moreSub).classList.add('active');if(b.dataset.moreSub==='Photos')renderPhotos()});
-window.addEventListener('error',e=>console.error('Erro global Meu Camping v6.5:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
+window.addEventListener('error',e=>console.error('Erro global Meu Camping v6.6:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
 </script>
 </body></html>
