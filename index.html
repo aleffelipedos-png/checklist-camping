@@ -70,7 +70,7 @@ main{max-width:1180px;padding:10px 10px 18px}
 
 /* ===== V7.2 FOTO DE PERFIL ===== */
 .profile-avatar{position:relative;overflow:hidden;padding:0;border:2px solid rgba(92,255,156,.55)!important;background:#0a4b38!important;cursor:pointer}
-.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}.profile-avatar{touch-action:manipulation;z-index:5}.profile-avatar:active{transform:scale(.97)}
 .profile-avatar:after{content:"📷";position:absolute;right:-2px;bottom:-2px;width:22px;height:22px;border-radius:50%;background:#073d2f;color:#fff;display:grid;place-items:center;font-size:11px;border:2px solid #4cf58b;box-shadow:0 2px 8px rgba(0,0,0,.3)}
 .avatar-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px;margin:12px 0}
 .avatar-option{border:2px solid transparent;background:#f4f7f5;border-radius:17px;padding:6px;position:relative}
@@ -202,7 +202,7 @@ main{max-width:1180px;padding:10px 10px 18px}
 const $=id=>document.getElementById(id), money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), uid=()=>crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
 const firebaseConfig={apiKey:"AIzaSyBMvUrNeobS2dMfRm4FZuo8lq989RlfMn0",authDomain:"meu-camping.firebaseapp.com",projectId:"meu-camping",storageBucket:"meu-camping.firebasestorage.app",messagingSenderId:"540013845763",appId:"1:540013845763:web:1bbbb6ea80c3a9ba651d36",measurementId:"G-QZ2R0SRQBH"};
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),firestore=firebase.firestore();let cloudUser=null,cloudUnsub=null,saveTimer=null,applyingRemote=false;
-const APP_VERSION='7.2';
+const APP_VERSION='7.3';
 // Chave estável: evita criar uma cópia inteira dos dados a cada versão do app.
 const STORAGE_KEY='campingPWA_main';
 const LEGACY_STORAGE_KEYS=['campingPWA_v65','campingPWA_v64','campingPWA_v63','campingPWA_v62','campingPWA_v61','campingPWA_v6','campingPWA_v5','campingPWA_v4','campingPWA_v3'];
@@ -465,9 +465,7 @@ $('addTripBtn').onclick=()=>openTripDialog();$('scheduleAddTripBtn').onclick=()=
 
     // 2) Atualiza a interface imediatamente.
     feedback.textContent='✅ Passeio salvo no aparelho.';
-    if($('profileAvatarBtn'))$('profileAvatarBtn').onclick=openAvatarPicker;
-if($('saveAvatarBtn'))$('saveAvatarBtn').onclick=()=>{if(!pendingProfileAvatar)return;db.profileAvatar=pendingProfileAvatar;save();renderProfileAvatar();$('avatarDialog').close();};
-render();
+    render();
     $('tripDialog').close();
     showScreen('Schedule');
 
@@ -507,6 +505,24 @@ const photoDBName='MeuCampingPhotos';function openPhotoDB(){return new Promise((
 $('mainMapGpsBtn').onclick=updateMainGps;$('mainMapSaveBtn').onclick=saveMainPoint;$('homeGpsCheck').onclick=async()=>{await checkCampingGps(true);renderHomeDashboard()};
 function render(){db.trips.forEach(t=>{if(!t.savedPoints)t.savedPoints=[];if(typeof t.campingModeActive!=='boolean')t.campingModeActive=false;});normalize();renderHome();renderChecklist();renderPurchases();renderMeals();renderBudget();renderRoute();renderBackpack();renderReady();renderDeparture();renderDuring();renderTrips();renderHistory();renderForgotten();renderPhotos();if($('screenMap').classList.contains('active'))setTimeout(renderMainMap,50)}
 function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const target=$('screen'+name);if(!target)return;target.classList.add('active');document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.screen===name));window.scrollTo({top:0,behavior:'smooth'});if(name==='Home'&&!weatherCache)loadWeather();if(name==='Map')setTimeout(renderMainMap,100)}window.showScreen=showScreen;document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showScreen(b.dataset.screen));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>showScreen(b.dataset.go));document.querySelectorAll('[data-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenPlan .subpanel').forEach(x=>x.classList.remove('active'));$('sub'+b.dataset.sub).classList.add('active');if(b.dataset.sub==='Route'){setTimeout(()=>{renderRoute();const m=ensureRouteMap();if(m)m.invalidateSize()},80)}});document.querySelectorAll('[data-trip-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-trip-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenTrip>.subpanel').forEach(x=>x.classList.remove('active'));$('trip'+b.dataset.tripSub).classList.add('active');if(b.dataset.tripSub==='During'){setTimeout(()=>{renderSavedPoints();checkCampingGps(false)},120)}});document.querySelectorAll('[data-more-sub]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-more-sub]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('#screenMore>.subpanel').forEach(x=>x.classList.remove('active'));$('more'+b.dataset.moreSub).classList.add('active');if(b.dataset.moreSub==='Photos')renderPhotos()});
-window.addEventListener('error',e=>console.error('Erro global Meu Camping v7.1:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
+
+// Foto de perfil: eventos globais, disponíveis assim que a página abre.
+const profileAvatarBtn=$('profileAvatarBtn');
+const saveAvatarBtn=$('saveAvatarBtn');
+const avatarDialogEl=$('avatarDialog');
+if(profileAvatarBtn){
+  profileAvatarBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openAvatarPicker();});
+  profileAvatarBtn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openAvatarPicker();}});
+}
+if(saveAvatarBtn){
+  saveAvatarBtn.addEventListener('click',()=>{
+    if(!pendingProfileAvatar)return;
+    db.profileAvatar=pendingProfileAvatar;
+    save();
+    renderProfileAvatar();
+    if(avatarDialogEl?.open)avatarDialogEl.close();
+  });
+}
+window.addEventListener('error',e=>console.error('Erro global Meu Camping v7.3:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
 </script>
 </body></html>
