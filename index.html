@@ -80,6 +80,11 @@ main{max-width:1180px;padding:10px 10px 18px}
 .profile-change-hint{font-size:9px;color:#d5eee3;margin-top:5px}
 @media(max-width:520px){.avatar-grid{grid-template-columns:repeat(3,1fr)}.avatar-option{padding:5px}}
 
+
+/* v7.5 — contas individuais */
+.auth-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#edf5f1;padding:5px;border-radius:12px;margin-bottom:12px}.auth-switch button{border:0;background:transparent;padding:9px;border-radius:9px;font-weight:800;color:#476459}.auth-switch button.active{background:#fff;color:#0b5b43;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.auth-panel{display:none}.auth-panel.active{display:block}.account-box{background:#f3f8f5;border:1px solid #d7e8df;border-radius:14px;padding:12px;margin:10px 0}.account-box b{display:block;color:#143d31}.account-box span{font-size:11px;color:#6a7d75;word-break:break-all}.auth-help{font-size:10px;color:#718079;text-align:center;margin-top:10px}.auth-link{border:0;background:transparent;color:#137451;text-decoration:underline;font-weight:700;padding:8px;cursor:pointer}.user-chip{display:inline-flex;align-items:center;gap:5px}.field-help{font-size:9px;color:#75837d;margin-top:4px}
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
@@ -87,7 +92,7 @@ main{max-width:1180px;padding:10px 10px 18px}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
 </head>
 <body>
-<header><div class="header"><div class="brand"><div class="brand-icon">🏕️</div><div><h1>Meu Camping</h1><p id="headerTrip">Planeje, prepare e aproveite</p><div style="font-size:9px;opacity:.55;margin-top:2px">v7.2</div></div></div><button id="syncBtn" class="cloud">☁️ <span id="syncText">Entrar</span></button></div></header>
+<header><div class="header"><div class="brand"><div class="brand-icon">🏕️</div><div><h1>Meu Camping</h1><p id="headerTrip">Planeje, prepare e aproveite</p><div style="font-size:9px;opacity:.55;margin-top:2px">v7.5</div></div></div><button id="syncBtn" class="cloud">☁️ <span id="syncText">Entrar</span></button></div></header>
 <main>
 <section id="screenSchedule" class="screen">
   <div class="schedule-hero"><div class="eyebrow">Planeje sua próxima aventura</div><h2>🗓️ Meus passeios</h2><p>Agende quantos passeios quiser. Cada um terá seu próprio destino, checklist, rota, clima, gastos e fotos.</p><button id="scheduleAddTripBtn" class="btn white">+ Agendar novo passeio</button></div>
@@ -97,7 +102,7 @@ main{max-width:1180px;padding:10px 10px 18px}
 <section id="screenHome" class="screen active">
   <div class="home-dark">
     <div class="card home-profile">
-      <div class="profile-row"><button id="profileAvatarBtn" class="profile-avatar" type="button" aria-label="Alterar foto de perfil"><img id="profileAvatarImg" src="avatar-1.webp" alt="Foto de perfil"></button><div class="profile-copy"><h2>Alef Felipe</h2><p>🌿 Apaixonado por camping • Planeje. Viaje. Viva mais.</p></div></div>
+      <div class="profile-row"><button id="profileAvatarBtn" class="profile-avatar" type="button" aria-label="Alterar foto de perfil"><img id="profileAvatarImg" src="avatar-1.webp" alt="Foto de perfil"></button><div class="profile-copy"><h2 id="profileNameText">Campista</h2><p>🌿 Apaixonado por camping • Planeje. Viaje. Viva mais.</p></div></div>
       <div class="camp-count"><div class="camp-count-line"><span>🔥 Você já fez <b id="homeCompletedCount">0 acampamentos</b></span><strong id="homeCount50">0 / 50</strong></div><div class="camp-progress"><i id="homeCampProgress" style="width:0%"></i></div></div>
       <div id="homeProgressMessage" class="progress-message">Cada viagem é uma nova história.</div>
     </div>
@@ -190,7 +195,8 @@ main{max-width:1180px;padding:10px 10px 18px}
 </nav>
 
 <dialog id="avatarDialog"><div class="modal"><button class="modal-close" onclick="avatarDialog.close()">×</button><h3>🏕️ Escolher foto de perfil</h3><div class="note">Escolha uma das imagens de camping abaixo.</div><div id="avatarGrid" class="avatar-grid"></div><button id="saveAvatarBtn" class="btn full">Salvar foto de perfil</button></div></dialog>
-<dialog id="loginDialog"><div class="modal"><button class="modal-close" onclick="loginDialog.close()">×</button><h3>☁️ Sincronizar com Firebase</h3><div class="field"><label>E-mail</label><input id="loginEmail" type="email" autocomplete="username"></div><div class="field"><label>Senha</label><input id="loginPassword" type="password" autocomplete="current-password"></div><button id="loginBtn" class="btn full">Entrar</button><div id="syncStatus" class="note" style="margin-top:10px"></div></div></dialog>
+<dialog id="loginDialog"><div class="modal"><button class="modal-close" onclick="loginDialog.close()">×</button><h3>👤 Minha conta</h3><div class="auth-switch"><button id="authTabLogin" class="active" type="button">Entrar</button><button id="authTabRegister" type="button">Criar conta</button></div><div id="authPanelLogin" class="auth-panel active"><div class="field"><label>E-mail</label><input id="loginEmail" type="email" autocomplete="username" placeholder="seuemail@exemplo.com"></div><div class="field"><label>Senha</label><input id="loginPassword" type="password" autocomplete="current-password"></div><button id="loginBtn" class="btn full" type="button">Entrar</button><button id="forgotPasswordBtn" class="auth-link full" type="button">Esqueci minha senha</button></div><div id="authPanelRegister" class="auth-panel"><div class="field"><label>Seu nome</label><input id="registerName" autocomplete="name" placeholder="Como quer aparecer no app"></div><div class="field"><label>E-mail</label><input id="registerEmail" type="email" autocomplete="email" placeholder="seuemail@exemplo.com"></div><div class="field"><label>Senha</label><input id="registerPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Mínimo 6 caracteres"><div class="field-help">Use pelo menos 6 caracteres.</div></div><div class="field"><label>Confirmar senha</label><input id="registerPassword2" type="password" autocomplete="new-password"></div><button id="registerBtn" class="btn full" type="button">Criar minha conta</button></div><div id="syncStatus" class="note" style="margin-top:10px"></div><div class="auth-help">Cada conta possui seus próprios passeios, checklist, perfil e histórico.</div></div></dialog>
+<dialog id="accountDialog"><div class="modal"><button class="modal-close" onclick="accountDialog.close()">×</button><h3>👤 Minha conta</h3><div class="account-box"><b id="accountName">Campista</b><span id="accountEmail"></span></div><div class="field"><label>Nome no Meu Camping</label><input id="accountDisplayName" autocomplete="name"></div><button id="saveAccountNameBtn" class="btn full" type="button">Salvar nome</button><button id="logoutBtn" class="btn secondary full" type="button" style="margin-top:8px">Sair da conta</button><div class="auth-help">Seus dados ficam separados dos demais usuários.</div></div></dialog>
 <dialog id="itemDialog"><div class="modal"><button class="modal-close" onclick="itemDialog.close()">×</button><h3 id="itemDialogTitle">Item</h3><input id="editItemId" type="hidden"><div class="field"><label>Nome</label><input id="itemName"></div><div class="form-grid"><div class="field"><label>Categoria</label><select id="itemCategory"></select></div><div class="field"><label>Quantidade</label><input id="itemQty" type="number" min="1" value="1"></div></div><div class="form-grid"><div class="field"><label>Preço estimado (R$)</label><input id="itemEstimated" type="number" min="0" step="0.01"></div><div class="field"><label>Preço pago (R$)</label><input id="itemPaid" type="number" min="0" step="0.01"></div></div><div class="field"><label>Comprar onde</label><input id="itemStore" placeholder="Ex.: mercado, loja de camping..."></div><div class="field"><label>Observação</label><textarea id="itemNote"></textarea></div><label style="display:flex;gap:7px;align-items:center"><input id="itemEssential" type="checkbox" style="width:auto"> Item essencial</label><button id="saveItemBtn" class="btn full" style="margin-top:12px">Salvar item</button></div></dialog>
 <dialog id="tripDialog"><div class="modal"><button class="modal-close" onclick="tripDialog.close()">×</button><h3 id="tripDialogTitle">Viagem</h3><input id="editTripId" type="hidden"><div class="field"><label>Nome da viagem</label><input id="tripName"></div><div class="form-grid"><div class="field"><label>Data de início</label><input id="tripDate" type="date"></div><div class="field"><label>Data final</label><input id="tripEndDate" type="date"></div></div><div class="field"><label>Destino / local do passeio</label><input id="tripLocation" placeholder="Digite o destino ou escolha no mapa"><button id="tripPickDestinationBtn" type="button" class="btn secondary full" style="margin-top:7px">📌 Escolher destino no mapa</button><div id="tripDestinationCoordsLabel" class="note" style="margin-top:6px"></div></div><div class="form-grid"><div class="field"><label>Pessoas</label><input id="tripPeople" type="number" min="1" value="1"></div><div class="field"><label>Tipo</label><select id="tripType"><option value="barraca">Barraca</option><option value="chale">Chalé</option><option value="pescaria">Pescaria</option><option value="praia">Praia</option><option value="frio">Frio</option><option value="familia">Família / crianças</option></select></div></div><label id="copyCurrentWrap" style="display:flex;gap:7px;align-items:center"><input id="copyCurrent" type="checkbox" style="width:auto"> Copiar checklist da viagem atual</label><button id="saveTripBtn" type="button" class="btn full" style="margin-top:12px">Salvar passeio</button><div id="saveTripFeedback" class="note" style="margin-top:8px"></div></div></dialog>
 <dialog id="mapPickerDialog"><div class="modal" style="width:min(96vw,760px)"><button class="modal-close" onclick="closeMapPicker()">×</button><h3 id="mapPickerTitle">Selecionar local no mapa</h3><div class="alert info" id="mapPickerHelp">Toque no mapa para marcar o local.</div><div class="field"><label>Buscar cidade, endereço ou local</label><div style="display:grid;grid-template-columns:1fr auto;gap:7px"><input id="mapPickerSearch" placeholder="Ex.: Parque Nacional do Iguaçu"><button id="mapPickerSearchBtn" type="button" class="btn secondary">Buscar</button></div></div><div id="mapPickerMap" class="picker-map"></div><div id="mapPickerSelected" class="map-pick-note">Nenhum ponto selecionado.</div><div class="picker-actions"><button type="button" class="btn secondary" onclick="closeMapPicker()">Cancelar</button><button id="mapPickerConfirmBtn" type="button" class="btn" disabled>Confirmar local</button></div></div></dialog>
@@ -202,9 +208,10 @@ main{max-width:1180px;padding:10px 10px 18px}
 const $=id=>document.getElementById(id), money=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'}), uid=()=>crypto?.randomUUID?.()||Date.now().toString(36)+Math.random().toString(36).slice(2);
 const firebaseConfig={apiKey:"AIzaSyBMvUrNeobS2dMfRm4FZuo8lq989RlfMn0",authDomain:"meu-camping.firebaseapp.com",projectId:"meu-camping",storageBucket:"meu-camping.firebasestorage.app",messagingSenderId:"540013845763",appId:"1:540013845763:web:1bbbb6ea80c3a9ba651d36",measurementId:"G-QZ2R0SRQBH"};
 firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),firestore=firebase.firestore();let cloudUser=null,cloudUnsub=null,saveTimer=null,applyingRemote=false;
-const APP_VERSION='7.3';
-// Chave estável: evita criar uma cópia inteira dos dados a cada versão do app.
-const STORAGE_KEY='campingPWA_main';
+const APP_VERSION='7.5';
+// Armazenamento separado por conta. O modo sem login continua usando a chave antiga.
+const GUEST_STORAGE_KEY='campingPWA_main';
+let STORAGE_KEY=GUEST_STORAGE_KEY;
 const LEGACY_STORAGE_KEYS=['campingPWA_v65','campingPWA_v64','campingPWA_v63','campingPWA_v62','campingPWA_v61','campingPWA_v6','campingPWA_v5','campingPWA_v4','campingPWA_v3'];
 let pendingLocalSync=false,lastLocalWriteAt=0;
 const categories=['Acampamento','Cozinha','Alimentos','Roupas','Equipamentos','Higiene','Primeiros socorros','Lazer','Carro/viagem','Outros'];
@@ -212,6 +219,9 @@ const starter=[['Barraca','Acampamento',1],['Lona','Acampamento',1],['Estacas','
 const typeSuggestions={barraca:[['Martelo','Acampamento'],['Bomba de ar','Acampamento'],['Extensão','Equipamentos']],chale:[['Roupa de cama','Acampamento'],['Toalhas','Higiene']],pescaria:[['Vara de pesca','Lazer'],['Iscas','Lazer'],['Caixa térmica','Alimentos'],['Boné','Roupas']],praia:[['Guarda-sol','Lazer'],['Roupa de banho','Roupas'],['Chinelo','Roupas'],['Protetor solar','Higiene']],frio:[['Cobertor','Acampamento'],['Touca','Roupas'],['Luvas','Roupas'],['Casaco','Roupas']],familia:[['Brinquedos','Lazer'],['Lanches para crianças','Alimentos'],['Lenço umedecido','Higiene'],['Protetor solar','Higiene']]};
 function newItem(name,category='Outros',essential=false){return{id:uid(),name,category,qty:1,note:'',status:'none',essential:!!essential,estimatedPrice:0,paidPrice:0,store:''}}
 function starterItems(){return starter.map(([n,c,e])=>newItem(n,c,!!e))}
+function freshDB(profileName='Campista'){const id=uid();return{active:id,profileName:profileName||'Campista',profileAvatar:'avatar-1.webp',updatedAt:Date.now(),trips:[{id,name:'Meu primeiro passeio',date:'',endDate:'',location:'',people:1,type:'barraca',createdAt:Date.now(),items:starterItems()}]}}
+function parseStored(key){try{const raw=localStorage.getItem(key);if(!raw)return null;const parsed=JSON.parse(raw);return parsed&&Array.isArray(parsed.trips)?parsed:null}catch(_e){return null}}
+function userStorageKey(user){return `campingPWA_user_${user.uid}`}
 let db;
 try{
   // Carrega primeiro a chave atual; se não existir, migra a cópia legada mais recente.
@@ -222,8 +232,8 @@ try{
     try{const parsed=JSON.parse(raw);if(parsed&&Array.isArray(parsed.trips)){db=parsed;break}}catch(_e){}
   }
 }catch(e){console.warn('Falha ao ler dados locais',e)}
-if(!db||!Array.isArray(db.trips)){const id=uid();db={active:id,updatedAt:Date.now(),trips:[{id,name:'Meu primeiro passeio',date:'',endDate:'',location:'',people:1,type:'barraca',createdAt:Date.now(),items:starterItems()}]}}
-function normalize(){db.trips.forEach(t=>{t.name=t.name||'Acampamento';t.date=t.date||'';t.endDate=t.endDate||t.date||'';t.location=t.location||'';t.people=Math.max(1,Number(t.people||1));t.type=t.type||'barraca';t.items=Array.isArray(t.items)?t.items:starterItems();t.expenses=Array.isArray(t.expenses)?t.expenses:[];t.meals=Array.isArray(t.meals)?t.meals:[];t.forgotten=Array.isArray(t.forgotten)?t.forgotten:[];t.departureChecks=t.departureChecks||{};t.duringNotes=t.duringNotes||'';t.vehicle=t.vehicle||{distanceKm:0,kml:10,fuelPrice:0,tolls:0};t.origin=t.origin||null;t.destinationCoords=t.destinationCoords||null;t.routeDurationMin=Number(t.routeDurationMin||0);t.routeDistanceKm=Number(t.routeDistanceKm||0);t.archived=!!t.archived;t.rating=Number(t.rating||0);t.postNotes=t.postNotes||'';t.items.forEach(i=>{i.id=i.id||uid();i.name=i.name||'Item';i.category=i.category||'Outros';i.qty=Math.max(1,Number(i.qty||1));i.note=i.note||'';i.status=i.status||'none';i.essential=!!i.essential;i.estimatedPrice=Number(i.estimatedPrice||0);i.paidPrice=Number(i.paidPrice||0);i.store=i.store||''})});if(!db.active||!db.trips.some(t=>t.id===db.active))db.active=db.trips[0]?.id||'';db.profileAvatar=db.profileAvatar||'avatar-1.webp';db.updatedAt=Number(db.updatedAt||Date.now())}normalize();
+if(!db||!Array.isArray(db.trips))db=freshDB('Campista');
+function normalize(){db.trips.forEach(t=>{t.name=t.name||'Acampamento';t.date=t.date||'';t.endDate=t.endDate||t.date||'';t.location=t.location||'';t.people=Math.max(1,Number(t.people||1));t.type=t.type||'barraca';t.items=Array.isArray(t.items)?t.items:starterItems();t.expenses=Array.isArray(t.expenses)?t.expenses:[];t.meals=Array.isArray(t.meals)?t.meals:[];t.forgotten=Array.isArray(t.forgotten)?t.forgotten:[];t.departureChecks=t.departureChecks||{};t.duringNotes=t.duringNotes||'';t.vehicle=t.vehicle||{distanceKm:0,kml:10,fuelPrice:0,tolls:0};t.origin=t.origin||null;t.destinationCoords=t.destinationCoords||null;t.routeDurationMin=Number(t.routeDurationMin||0);t.routeDistanceKm=Number(t.routeDistanceKm||0);t.archived=!!t.archived;t.rating=Number(t.rating||0);t.postNotes=t.postNotes||'';t.items.forEach(i=>{i.id=i.id||uid();i.name=i.name||'Item';i.category=i.category||'Outros';i.qty=Math.max(1,Number(i.qty||1));i.note=i.note||'';i.status=i.status||'none';i.essential=!!i.essential;i.estimatedPrice=Number(i.estimatedPrice||0);i.paidPrice=Number(i.paidPrice||0);i.store=i.store||''})});if(!db.active||!db.trips.some(t=>t.id===db.active))db.active=db.trips[0]?.id||'';db.profileAvatar=db.profileAvatar||'avatar-1.webp';db.profileName=db.profileName||cloudUser?.displayName||'Campista';db.updatedAt=Number(db.updatedAt||Date.now())}normalize();
 function currentTrip(){return db.trips.find(t=>t.id===db.active)||db.trips[0]}
 function compactForStorage(source){
   // routeGeometry pode ficar muito grande. A rota pode ser recalculada a partir da origem/destino,
@@ -293,33 +303,55 @@ async function startCloud(user){
   cloudUser=user;
   if(cloudUnsub)cloudUnsub();
   setSync('online','Conectando...');
+  STORAGE_KEY=userStorageKey(user);
+  const localAccount=parseStored(STORAGE_KEY);
   const ref=cloudRef();
   try{
     const snap=await ref.get();
-    if(!snap.exists){
-      await ref.set({data:db,clientUpdatedAt:Number(db.updatedAt||Date.now()),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()});
-      pendingLocalSync=false;
-    }else{
-      const p=snap.data()||{},r=p.data,rt=Number(p.clientUpdatedAt||r?.updatedAt||0),lt=Number(db.updatedAt||0);
-      if(r&&Array.isArray(r.trips)&&rt>lt&&!pendingLocalSync){
-        applyingRemote=true;db=r;normalize();writeLocal({touch:false});applyingRemote=false;render();
-      }else if(lt>rt){
+    const remotePayload=snap.exists?(snap.data()||{}):null;
+    const remoteDB=remotePayload?.data;
+    const remoteStamp=Number(remotePayload?.clientUpdatedAt||remoteDB?.updatedAt||0);
+    const localStamp=Number(localAccount?.updatedAt||0);
+    if(localAccount&&Array.isArray(localAccount.trips)){
+      db=localAccount;
+      normalize();
+      if(!db.profileName||db.profileName==='Campista')db.profileName=user.displayName||user.email?.split('@')[0]||'Campista';
+      if(remoteDB&&Array.isArray(remoteDB.trips)&&remoteStamp>localStamp){
+        applyingRemote=true;db=remoteDB;normalize();writeLocal({touch:false});applyingRemote=false;
+      }else if(!snap.exists||localStamp>remoteStamp){
         await pushCloudNow();
       }
+    }else if(remoteDB&&Array.isArray(remoteDB.trips)){
+      applyingRemote=true;db=remoteDB;normalize();writeLocal({touch:false});applyingRemote=false;
+    }else{
+      db=freshDB(user.displayName||user.email?.split('@')[0]||'Campista');normalize();writeLocal({touch:false});
+      await ref.set({data:db,clientUpdatedAt:Number(db.updatedAt||Date.now()),createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
     }
+    await firestore.collection('users').doc(user.uid).collection('profile').doc('account').set({name:db.profileName||user.displayName||'Campista',email:user.email||'',updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(()=>{});
+    render();
     cloudUnsub=ref.onSnapshot(snap2=>{
       if(!snap2.exists||applyingRemote)return;
       const p=snap2.data()||{},r=p.data,rt=Number(p.clientUpdatedAt||r?.updatedAt||0),lt=Number(db.updatedAt||0);
       if(pendingLocalSync||Date.now()-lastLocalWriteAt<1500){setSync('online','Sincronizando...');return;}
-      if(r&&Array.isArray(r.trips)&&rt>lt){
-        applyingRemote=true;db=r;normalize();writeLocal({touch:false});applyingRemote=false;render();
-      }
+      if(r&&Array.isArray(r.trips)&&rt>lt){applyingRemote=true;db=r;normalize();writeLocal({touch:false});applyingRemote=false;render();}
       setSync('online','Sincronizado');
     },e=>{console.error(e);setSync('error','Erro')});
     setSync('online','Sincronizado');
-  }catch(e){console.error(e);setSync('error','Salvo no aparelho')}
+  }catch(e){console.error(e);setSync('error','Salvo no aparelho');render();}
 }
-auth.onAuthStateChanged(u=>{cloudUser=u||null;if(u)startCloud(u);else setSync('offline','Entrar')});$('syncBtn').onclick=async()=>{if(cloudUser){if(confirm('Deseja sair da sincronização?'))await auth.signOut()}else $('loginDialog').showModal()};$('loginBtn').onclick=async()=>{try{await auth.signInWithEmailAndPassword($('loginEmail').value.trim(),$('loginPassword').value);$('loginDialog').close()}catch(e){alert('Não foi possível entrar. Confira e-mail e senha.')}};
+function showAuthTab(which){const login=which==='login';$('authTabLogin').classList.toggle('active',login);$('authTabRegister').classList.toggle('active',!login);$('authPanelLogin').classList.toggle('active',login);$('authPanelRegister').classList.toggle('active',!login)}
+$('authTabLogin').onclick=()=>showAuthTab('login');$('authTabRegister').onclick=()=>showAuthTab('register');
+auth.onAuthStateChanged(async u=>{
+  if(u){cloudUser=u;await startCloud(u)}else{
+    cloudUser=null;if(cloudUnsub){cloudUnsub();cloudUnsub=null}STORAGE_KEY=GUEST_STORAGE_KEY;db=parseStored(STORAGE_KEY)||freshDB('Campista');normalize();setSync('offline','Entrar');render();
+  }
+});
+$('syncBtn').onclick=()=>{if(cloudUser){$('accountName').textContent=db.profileName||cloudUser.displayName||'Campista';$('accountEmail').textContent=cloudUser.email||'';$('accountDisplayName').value=db.profileName||cloudUser.displayName||'';$('accountDialog').showModal()}else{showAuthTab('login');$('loginDialog').showModal()}};
+$('loginBtn').onclick=async()=>{try{const email=$('loginEmail').value.trim(),pass=$('loginPassword').value;if(!email||!pass)return alert('Informe e-mail e senha.');setSync('online','Entrando...');await auth.signInWithEmailAndPassword(email,pass);$('loginDialog').close()}catch(e){console.error(e);alert('Não foi possível entrar. Confira e-mail e senha.')}};
+$('registerBtn').onclick=async()=>{try{const name=$('registerName').value.trim(),email=$('registerEmail').value.trim(),pass=$('registerPassword').value,pass2=$('registerPassword2').value;if(!name)return alert('Informe seu nome.');if(!email)return alert('Informe seu e-mail.');if(pass.length<6)return alert('A senha precisa ter pelo menos 6 caracteres.');if(pass!==pass2)return alert('As senhas não são iguais.');setSync('online','Criando conta...');const cred=await auth.createUserWithEmailAndPassword(email,pass);await cred.user.updateProfile({displayName:name});STORAGE_KEY=userStorageKey(cred.user);db=freshDB(name);normalize();writeLocal({touch:false});await firestore.collection('users').doc(cred.user.uid).collection('profile').doc('account').set({name,email,createdAt:firebase.firestore.FieldValue.serverTimestamp(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});await pushCloudNow();$('loginDialog').close();render();alert('Conta criada com sucesso! Seus dados agora são individuais.')}catch(e){console.error(e);const msg=e?.code==='auth/email-already-in-use'?'Este e-mail já possui uma conta.':e?.code==='auth/invalid-email'?'E-mail inválido.':e?.code==='auth/weak-password'?'Escolha uma senha mais forte.':'Não foi possível criar a conta.';alert(msg)}};
+$('forgotPasswordBtn').onclick=async()=>{const email=$('loginEmail').value.trim();if(!email)return alert('Digite seu e-mail primeiro.');try{await auth.sendPasswordResetEmail(email);alert('Enviamos um e-mail para redefinir sua senha.')}catch(e){console.error(e);alert('Não foi possível enviar o e-mail de recuperação.')}};
+$('logoutBtn').onclick=async()=>{if(!confirm('Deseja sair desta conta?'))return;$('accountDialog').close();await auth.signOut()};
+$('saveAccountNameBtn').onclick=async()=>{const name=$('accountDisplayName').value.trim();if(!name)return alert('Informe seu nome.');db.profileName=name;save();if(cloudUser){await cloudUser.updateProfile({displayName:name}).catch(()=>{});await firestore.collection('users').doc(cloudUser.uid).collection('profile').doc('account').set({name,email:cloudUser.email||'',updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true}).catch(()=>{})}render();$('accountName').textContent=name;alert('Nome atualizado.')};
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}function fmtDate(v){if(!v)return'Data não definida';const[y,m,d]=v.split('-');return`${d}/${m}/${y}`}function daysUntil(v){if(!v)return null;const[y,m,d]=v.split('-').map(Number),now=new Date(),today=new Date(now.getFullYear(),now.getMonth(),now.getDate(),12),target=new Date(y,m-1,d,12);return Math.ceil((target-today)/86400000)}function tripDuration(t){if(!t.date)return 1;if(!t.endDate)return 1;const a=new Date(t.date+'T12:00:00'),b=new Date(t.endDate+'T12:00:00');return Math.max(1,Math.round((b-a)/86400000)+1)}
 function stats(t=currentTrip()){const items=t?.items||[],packed=items.filter(i=>i.status==='packed').length,have=items.filter(i=>i.status==='have').length,buy=items.filter(i=>i.status==='buy').length,total=items.length,ready=packed+have,pct=total?Math.round(ready/total*100):0;return{total,packed,have,buy,ready,pct,pending:total-ready}}
 function readiness(t=currentTrip()){const s=stats(t),ess=t.items.filter(i=>i.essential),essOk=ess.filter(i=>i.status==='packed'||i.status==='have').length,essPct=ess.length?essOk/ess.length*100:100,shopping=t.items.filter(i=>i.status==='buy'),shoppingPct=shopping.length?Math.max(0,100-shopping.length*12):100,mealPct=t.meals.length?100:45;let score=Math.round(s.pct*.5+essPct*.25+shoppingPct*.15+mealPct*.1);return{score:Math.max(0,Math.min(100,score)),ess,essOk,shopping}}
@@ -393,7 +425,7 @@ function renderHomeUpcoming(){const today=todayISO();const a=(db.trips||[]).filt
 window.selectTripHome=id=>{db.active=id;save();render();showScreen('Home')};
 const PROFILE_AVATARS=['avatar-1.webp','avatar-2.webp','avatar-3.webp','avatar-4.webp','avatar-5.webp'];
 let pendingProfileAvatar=null;
-function renderProfileAvatar(){const chosen=PROFILE_AVATARS.includes(db.profileAvatar)?db.profileAvatar:PROFILE_AVATARS[0];db.profileAvatar=chosen;if($('profileAvatarImg'))$('profileAvatarImg').src=chosen}
+function renderProfileAvatar(){const chosen=PROFILE_AVATARS.includes(db.profileAvatar)?db.profileAvatar:PROFILE_AVATARS[0];db.profileAvatar=chosen;if($('profileAvatarImg'))$('profileAvatarImg').src=chosen;if($('profileNameText'))$('profileNameText').textContent=db.profileName||cloudUser?.displayName||'Campista'}
 function renderAvatarGrid(){const current=pendingProfileAvatar||db.profileAvatar||PROFILE_AVATARS[0];$('avatarGrid').innerHTML=PROFILE_AVATARS.map((src,i)=>`<button type="button" class="avatar-option ${src===current?'selected':''}" data-avatar="${src}" aria-label="Foto ${i+1}"><img src="${src}" alt="Opção de foto de perfil ${i+1}"></button>`).join('');$('avatarGrid').querySelectorAll('[data-avatar]').forEach(btn=>btn.onclick=()=>{pendingProfileAvatar=btn.dataset.avatar;renderAvatarGrid()})}
 function openAvatarPicker(){pendingProfileAvatar=db.profileAvatar||PROFILE_AVATARS[0];renderAvatarGrid();$('avatarDialog').showModal()}
 function renderHomeDashboard(){const t=currentTrip(),done=completedTrips(),count=done.length,capped=Math.min(50,count),locations=new Set(done.map(x=>normalizeText(x.location)).filter(Boolean)).size,km=totalTravelKm(),days=done.reduce((s,x)=>s+tripDays(x),0);$('homeCompletedCount').textContent=`${count} ${count===1?'acampamento':'acampamentos'}`;$('homeCount50').textContent=`${capped} / 50`;$('homeCampProgress').style.width=`${Math.min(100,capped/50*100)}%`;const msg=count===0?'Sua primeira aventura começa aqui.':count<5?'Você começou bem. Cada camping deixa uma história.':count<10?'Você já está colecionando grandes aventuras.':count<20?'A natureza já faz parte da sua história.':count<35?'Muitas estradas, histórias e lugares já ficaram na memória.':count<50?'Você está chegando a 50 acampamentos. Que jornada!':'50 acampamentos! Uma coleção inteira de histórias na natureza.';if($('homeProgressMessage'))$('homeProgressMessage').textContent=msg;$('homeDarkStats').innerHTML=`<div class="dark-stat"><span class="ico">🏕️</span><b>${count}</b><span>Acampamentos</span></div><div class="dark-stat"><span class="ico">📍</span><b>${locations}</b><span>Locais visitados</span></div><div class="dark-stat"><span class="ico">📷</span><b data-home-stat="photos">0</b><span>Fotos</span></div><div class="dark-stat"><span class="ico">🛣️</span><b>${Math.round(km).toLocaleString('pt-BR')} km</b><span>Percorridos</span></div><div class="dark-stat"><span class="ico">📅</span><b>${days}</b><span>Dias na natureza</span></div>`;const d=daysUntil(t.date);$('homeNextTrip').innerHTML=`<div><div class="eyebrow">Próximo acampamento</div><h3>${esc(t.name)}</h3><div class="meta-line">📅 ${t.date?fmtDate(t.date):'Data a definir'} &nbsp; 📍 ${esc(t.location||'Destino a definir')}${t.routeDistanceKm?` &nbsp; 🚗 ${Math.round(t.routeDistanceKm)} km`:''}</div></div><div class="next-trip-actions"><button class="btn" onclick="showScreen('Checklist')">Ver detalhes</button><button class="btn secondary" onclick="showScreen('Schedule')">Passeios</button></div>`;const active=!!t.campingModeActive;$('homeGpsChip').textContent=active?'ATIVO':'GPS';$('homeGpsText').textContent=active?'Você chegou ao destino. Modo Camping ativo.':'Ativa automaticamente quando você chega perto do destino.';renderHomeUpcoming();renderHomePhotoStats()}
@@ -523,6 +555,6 @@ if(saveAvatarBtn){
     if(avatarDialogEl?.open)avatarDialogEl.close();
   });
 }
-window.addEventListener('error',e=>console.error('Erro global Meu Camping v7.4:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
+window.addEventListener('error',e=>console.error('Erro global Meu Camping v7.5:',e.error||e.message));window.addEventListener('beforeunload',()=>{try{writeLocal({touch:false})}catch(e){}});if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').then(r=>r.update()).catch(console.error));save({touch:false,sync:false});render();setTimeout(()=>loadWeather(),300);
 </script>
 </body></html>
